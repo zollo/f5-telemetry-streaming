@@ -289,3 +289,5 @@ Declaration with all **runtime** properties specified:
             }
         }
     }
+
+.. NOTE:: "controls" objects should be defined under the "class": "Telemetry" object.

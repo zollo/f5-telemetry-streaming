@@ -41,7 +41,12 @@ const ES_TRANSPORT_PORT = 9300;
 const ES_CONSUMER_NAME = 'Consumer_ElasticSearch';
 const ES_MAX_FIELDS = 5000;
 
-const ES_VERSIONS_TO_TEST = ['6.7.2', '7.14.1', '8.0.0'];
+const ES_VERSIONS_TO_TEST = [
+    // '6.7.2', - EOL
+    // '7.14.1', - EOL JAN 2026
+    '8.19.5', // EOL Jul 2027
+    '9.1.5'
+];
 
 const DOCKER_CONTAINERS = {
     ElasticSearch: {

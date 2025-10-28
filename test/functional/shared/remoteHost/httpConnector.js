@@ -64,7 +64,7 @@ const DEFAULTS = Object.freeze({
  * @property {string | URL} proxy - proxy URI or proxy config
  * @property {boolean} rawResponseBody - return response as Buffer object with binary data
  * @property {PromiseRetryOptions} retryOptions - retry options
- * @property {integer} timeout - milliseconds to wait for a socket timeout (option from 'request' library)
+ * @property {integer} timeout - milliseconds to wait for a socket timeout (option from '@cypress/request' library)
  */
 class HTTPConnector {
     /**

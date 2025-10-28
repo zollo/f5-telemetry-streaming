@@ -22,7 +22,7 @@ const EventEmitter2 = require('eventemitter2');
 const fsUtil = require('fs');
 const nock = require('nock');
 const pathUtil = require('path');
-const requestLib = require('request');
+const requestLib = require('@cypress/request');
 const sinon = require('sinon');
 const urllib = require('url');
 
@@ -536,7 +536,7 @@ const _module = module.exports = {
     },
 
     /**
-     * @returns {object} 'request' spies
+     * @returns {object} '@cypress/request' spies
      */
     requestSpies() {
         const ret = {};

@@ -19,7 +19,7 @@
 /* eslint-disable import/order */
 const moduleCache = require('../shared/restoreCache')();
 
-const request = require('request');
+const request = require('@cypress/request');
 const sinon = require('sinon');
 
 const assert = require('../shared/assert');

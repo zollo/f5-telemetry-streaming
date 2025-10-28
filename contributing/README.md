@@ -108,7 +108,7 @@ How does the project handle a typical `POST` request?
             "trace": false,
             "format": "default"
         },
-        "schemaVersion": "1.39.0"
+        "schemaVersion": "1.40.0"
     }
 }
 ```
@@ -380,15 +380,21 @@ See the [INTERNAL_README.md](../INTERNAL_README.md) for an internal explanation 
 ### Development
 
 Local environment requirements:
-- NodeJS - any version
-- npm - preferable is latest release for v7 because it uses lockfile version 2 that is backward compatible with version 1 (important for node 4.8.0 + npm@5 and node 8.11.1 + npm@6). But if you not going to add new packages while working on a task then any npm version can be used and then you should use `npm run install-test` command to install packages and prepare dev env.
+- NodeJS - any version, but for verifying unit tests v8.11.1 is required.
+- npm - any version, but for verifying unit tests v6 is required (compatible with node.js v8.11.1)
 
-Note: to make everyday live easier you may start to use tools like `volta` or `nvm`.
+To make everyday live easier you may start to use tools like `volta` or `nvm`.
+
+```shell
+volta install node@8.11.1 && volta install npm@6
+```
 
 ### Package updates
 
-Some packages has newer versions that dropped support for node@4 and node@8 - TS should use older version (despite the type of package - dev or prod). In this case those packages may have vulnerabilities that will be never fixed. We can try to contribute to the corresponding project/package but it is unlikle the fix will be accepted for such old version. In this case add note(s) to package.json file - see **comments** section for examples.
+Some packages has newer versions that dropped support for node@8 - TS should use older version (despite the type of package - dev or prod). In this case those packages may have vulnerabilities that will be never fixed. We can try to contribute to the corresponding project/package but it is unlikle the fix will be accepted for such old version. In this case add note(s) to package.json file - see **comments** section for examples.
 
 Some `devDependencies`, e.g. **mocha**, **nyc**, intentionally pinned to older versions to avoid additional manipulations at CI/CD time or local envrionment.
 
 `devDependencies` that are unique for `functional` testing only, e.g. **ssh2**, may use the version that applicable for `functional` testing evnrionment only.
+
+When installing new package be sure that `package-lock.json` was generated with version `2`.

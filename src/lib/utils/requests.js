@@ -16,7 +16,7 @@
 
 'use strict';
 
-const request = require('request');
+const request = require('@cypress/request');
 
 const constants = require('../constants');
 const logger = require('../logger').getChild('requests');
@@ -111,7 +111,7 @@ const buildProxyURL = function (proxyOpts) {
  * @param {Boolean} [options.includeResponseObject = false] - return [body, responseObject]
  * @param {Array<Integer>|Integer} [options.expectedResponseCode = 200]  - expected response code
  * @param {Integer} [options.timeout] - Milliseconds to wait for a socket timeout.
- *      Option 'passes through' to 'request' library
+ *      Option 'passes through' to '@cypress/request' library
  * @param {String | Proxy} [options.proxy] - proxy URI or proxy config
  * @param {Boolean} [options.gzip] - accept compressed content from the server
  *

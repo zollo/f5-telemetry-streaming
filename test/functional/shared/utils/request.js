@@ -18,7 +18,7 @@
 
 const assignDefaults = require('lodash/defaults');
 const clone = require('lodash/clone');
-const request = require('request');
+const request = require('@cypress/request');
 const trimEnd = require('lodash/trimEnd');
 const trimStart = require('lodash/trimStart');
 
@@ -255,5 +255,5 @@ module.exports = function makeRequest() {
  * @property {'http' | 'https'} [protocol = 'https'] - HTTP protocol
  * @property {string | URL} [proxy] - proxy URI or proxy config
  * @property {boolean} [rawResponseBody = false] - return response as Buffer object with binary data
- * @property {integer} [timeout] - milliseconds to wait for a socket timeout (option from 'request' library)
+ * @property {integer} [timeout] - milliseconds to wait for a socket timeout (option from '@cypress/request' library)
  */

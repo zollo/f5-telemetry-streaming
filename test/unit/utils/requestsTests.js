@@ -21,7 +21,7 @@ const moduleCache = require('../shared/restoreCache')();
 
 const http = require('http');
 const nock = require('nock');
-const request = require('request');
+const request = require('@cypress/request');
 const sinon = require('sinon');
 
 const assert = require('../shared/assert');

@@ -205,9 +205,9 @@ class IHealthAPI {
     }
 
     /**
-     * Makes default options for 'request' library
+     * Makes default options for '@cypress/request' library
      *
-     * @returns {object} default 'request' options
+     * @returns {object} default '@cypress/request' options
      */
     getDefaultRequestOptions() {
         const options = {

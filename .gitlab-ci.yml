@@ -1,4 +1,4 @@
-image: ${ARTIFACTORY_DOCKER_HUB}/node:16
+image: ${ATG_IMG_REGISTRY_URL}/node:16
 
 stages:
     - lint
@@ -89,7 +89,8 @@ variables:
 .harness_deployment_definition: &harness_deployment_definition
     image: ${CICD_CONTAINER_DEPLOY}
     tags:
-        - atg-telemetry-streaming-docker
+        - cm-official-docker-executor
+        # - atg-telemetry-streaming-docker
  
 .run_unittest:
     extends:
@@ -150,7 +151,7 @@ variables:
             - $RUN_AWS_TESTS == "true"
 
 .deploy_cloud: &deploy_cloud
-    image: ${ARTIFACTORY_SERVER}/${DEPLOYMENT_TOOL_IMG}
+    image: ${ATG_ARTIFACTORY_BASE_URL}/${DEPLOYMENT_TOOL_IMG}
     stage: deploy
 
 .test_cloud: &test_cloud
@@ -164,7 +165,7 @@ variables:
         expire_in: 4 days
 
 .teardown_cloud: &teardown_cloud
-    image: ${ARTIFACTORY_SERVER}/${DEPLOYMENT_TOOL_IMG}
+    image: ${ATG_ARTIFACTORY_BASE_URL}/${DEPLOYMENT_TOOL_IMG}
     stage: teardown
     when: always
 
@@ -177,7 +178,7 @@ variables:
 lint:
     extends:
         - .test_job_definition
-    image: ${ARTIFACTORY_DOCKER_HUB}/node:14
+    image: ${ATG_IMG_REGISTRY_URL}/node:14
     stage: lint
     script:
         - *install_unittest_packages_cmd
@@ -211,13 +212,13 @@ secret_detection:
 test_node8:
     extends:
         - .run_unittest
-    image: ${ARTIFACTORY_DOCKER_HUB}/node:8.11.1
+    image: ${ATG_IMG_REGISTRY_URL}/node:8.11.1
     rules:
         - !reference [.rules_config, skip_unit_feat_brach, rules]
 
 # packages audit
 npm_audit:
-    image: ${ARTIFACTORY_DOCKER_HUB}/node:22
+    image: ${ATG_IMG_REGISTRY_URL}/node:22
     extends:
         - .test_job_definition
     allow_failure: true
@@ -238,7 +239,7 @@ npm_audit:
 
 coverage:
     # bind to 14.1+ version to test @grppc-js and OpenTelemetry
-    image: ${ARTIFACTORY_DOCKER_HUB}/node:8.11.1
+    image: ${ATG_IMG_REGISTRY_URL}/node:8.11.1
     extends:
         - .test_job_definition
     script:
@@ -324,7 +325,8 @@ test_functional:
         when: always
         expire_in: 4 days
     tags:
-        - atg-telemetry-streaming-docker
+        - cm-official-docker-executor
+        # - atg-telemetry-streaming-docker
     only:
         variables:
             # enable this job

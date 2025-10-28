@@ -16,7 +16,7 @@
 
 'use strict';
 
-const jwt = require('jsonwebtoken');
+const jws = require('jws');
 const requestsUtil = require('../../utils/requests');
 const getCurrentUnixTimeInSeconds = require('../../utils/datetime').getCurrentUnixTimeInSeconds;
 
@@ -160,28 +160,23 @@ function getAccessToken(serviceAccount) {
             fullURI: `${METADATA_URL}/v1/instance/service-accounts/${serviceAccount.serviceEmail}/token`
         };
     } else {
-        const scope = 'https://www.googleapis.com/auth/monitoring https://www.googleapis.com/auth/logging.write';
         const jwtAge = 60 * 60; // 1 hour, in seconds
-        const jwtSigningOptions = {
-            algorithm: 'RS256',
+        const jwtRequest = jws.sign({
             header: {
-                kid: serviceAccount.privateKeyId,
+                alg: 'RS256',
                 typ: 'JWT',
-                alg: 'RS256'
-            }
-        };
-
-        const jwtRequest = jwt.sign(
-            {
+                kid: serviceAccount.privateKeyId
+            },
+            payload: {
                 iss: serviceAccount.serviceEmail,
-                scope,
+                scope: 'https://www.googleapis.com/auth/monitoring https://www.googleapis.com/auth/logging.write',
                 aud: 'https://oauth2.googleapis.com/token',
                 exp: getCurrentUnixTimeInSeconds() + jwtAge,
                 iat: getCurrentUnixTimeInSeconds()
             },
-            serviceAccount.privateKey,
-            jwtSigningOptions
-        );
+            secret: serviceAccount.privateKey,
+            encoding: 'utf8'
+        });
 
         httpOptions = {
             method: 'POST',
