@@ -19,7 +19,7 @@
 /* eslint-disable import/order */
 const moduleCache = require('../shared/restoreCache')();
 
-const jwt = require('jsonwebtoken');
+const jws = require('jws');
 const nock = require('nock');
 const sinon = require('sinon');
 
@@ -41,14 +41,14 @@ describe('Google Cloud Util Tests', () => {
             access_token: 'hereHaveSomeAccess',
             expires_in: 1000
         };
-        let jwtSignStub;
+        let jwsSignStub;
 
         beforeEach(() => {
-            jwtSignStub = sinon.stub(jwt, 'sign').returns('somejsonwebtoken');
+            jwsSignStub = sinon.stub(jws, 'sign').returns('somejsonwebtoken');
         });
 
         afterEach(() => {
-            jwtSignStub.restore();
+            jwsSignStub.restore();
             testUtil.nockCleanup();
         });
 
@@ -83,7 +83,7 @@ describe('Google Cloud Util Tests', () => {
             ])
                 .then((tokens) => {
                     assert.isTrue(nock.isDone());
-                    assert.strictEqual(jwtSignStub.callCount, 2);
+                    assert.strictEqual(jwsSignStub.callCount, 2);
                     assert.deepStrictEqual(tokens, ['hereHaveSomeAccess', 'hereHaveSomeAccess']);
                 });
         });

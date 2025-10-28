@@ -7,6 +7,17 @@ Changes to this project are documented in this file. More detail and links can b
 ### Changed
 ### Removed
 
+## 1.40.0
+### Added
+- Add integration testing to verify compatibility with latest ElasticSearch versions - v8.x and 9.x
+### Fixed
+- Update Docker image for Kafka integration testing to v3.3.2
+### Changed
+- Replace deprecated `request` with fork `@cypress/request` to resolve CVEs
+- Replace `jsonwebtoken` with `jws` to resolve CVEs
+- Downgrage `@grpc/proto-loader` to match `@grpc/grpc-js` to reduce package installation size
+### Removed
+
 ## 1.39.0
 ### Added
 ### Fixed

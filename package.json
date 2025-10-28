@@ -1,6 +1,6 @@
 {
     "name": "f5-telemetry",
-    "version": "1.39.0-1",
+    "version": "1.40.0-1",
     "author": "F5, Inc.",
     "license": "Apache-2.0",
     "repository": {
@@ -38,9 +38,10 @@
         ]
     },
     "dependencies": {
+        "@cypress/request": "3.0.9",
         "@f5devcentral/f5-teem": "1.6.1",
         "@grpc/grpc-js": "1.9.15",
-        "@grpc/proto-loader": "0.8.0",
+        "@grpc/proto-loader": "^0.7.8",
         "@opentelemetry/api": "1.4.1",
         "@opentelemetry/exporter-metrics-otlp-grpc": "0.41.2",
         "@opentelemetry/exporter-metrics-otlp-http": "0.41.2",
@@ -55,15 +56,13 @@
         "heap": "0.2.7",
         "jmespath": "0.16.0",
         "json-duplicate-key-handle": "file:opensource/json-duplicate-key-handle",
-        "jsonwebtoken": "8.5.1",
+        "jws": "4.0.0",
         "kafka-node": "5.0.0",
         "lodash": "4.17.21",
-        "long": "5.2.5",
         "machina": "4.0.2",
         "mustache": "4.2.0",
         "pako": "1.0.11",
         "prom-client": "11.0.0",
-        "request": "2.88.2",
         "statsd-client": "0.4.7",
         "tiny-request-router": "1.2.2",
         "uuid": "9.0.1"
@@ -83,10 +82,23 @@
         "nyc": "14.1.1",
         "proxyquire": "2.1.3",
         "sinon": "15.2.0",
-        "@sinonjs/samsam": "8.0.0",
-        "@sinonjs/fake-timers": "11.2.2",
         "ssh2": "0.8.9",
         "winston": "2.4.7"
+    },
+    "overrides": {
+        "@cypress/request": {
+            "tough-cookie": "4.1.4"
+        },
+        "@grpc/proto-loader": {
+            "long": "5.2.5"
+        },
+        "aws-sdk": {
+            "xml2js": "0.6.2"
+        },
+        "sinon": {
+            "nise": "5.1.4",
+            "@sinonjs/samsam": "8.0.0"
+        }
     },
     "eslintConfig": {
         "extends": "@f5devcentral/eslint-config-f5-atg",
@@ -104,14 +116,13 @@
     "comments": {
         "dependencies": {
             "@grpc/grpc-js": "This package dropped support for older node versions. Use 1.9.15 for Node v8. Small chance v1.10.x may work, but not tested.",
+            "@grpc/proto-loader": "Should match same version as @grpc/grpc-js to avoid having multiple versions.",
             "ajv": "This package dropped support for older node versions and requires the ajv package to be recompiled. Use v6.X.Y for Node v4.",
             "ajv-keywords": "This package documents that v3 should be used when using ajv v6",
             "applicationinsights": "This package requires Node v8 in 2.0.0+ as it now includes OpenTelemetry packages. Use v1.X.Y for Node v4.",
             "aws-sdk": "This package dropped support for older node versions. Use 2.1018.0 for Node < v10.",
-            "commander": "This package dropped support for older node versions. Use v2.X.Y for Node v4.",
             "google-auth-library": "This package is used for GRPC connection, supports node v10 and above, but fromJSON function works in node v8.11.1 - should use v6.1.X only",
             "json-duplicate-key-handle": "This package is included locally to track updates and/or vulnerabilities. Included version is v1.0.0",
-            "jsonwebtoken": "This package dropped support for older node versions. Use v8.5.1 for Node v8.",
             "kafka-node": "This package dropped support for older node versions. Use v2.X.Y for Node v4.",
             "prom-client": "This package dropped support for older node versions. Use v11.X.Y for Node v4. Cannot go higher than 11.0.0 because of syntax failures on test_node4."
         },

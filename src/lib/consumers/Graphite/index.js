@@ -16,7 +16,7 @@
 
 'use strict';
 
-const request = require('request');
+const request = require('@cypress/request');
 
 /**
  * See {@link ../README.md#context} for documentation

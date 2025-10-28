@@ -16,7 +16,7 @@
 
 'use strict';
 
-const jwt = require('jsonwebtoken');
+const jws = require('jws');
 
 const constants = require('../constants');
 const logger = require('../utils/logger').getChild('gcpUtils');
@@ -85,24 +85,22 @@ function getOAuthToken(serviceEmail, privateKey, privateKeyID, cloudType) {
     const port = 443;
     const protocol = 'https';
     const uri = '/token';
-    const newJwt = jwt.sign(
-        {
+    const newJwt = jws.sign({
+        header: {
+            kid: privateKeyID,
+            typ: 'JWT',
+            alg: 'RS256'
+        },
+        payload: {
             iss: serviceEmail,
             scope: gcp.scope,
             aud: `${protocol}://${gcp.login}${uri}`,
             exp: Math.floor(Date.now() / 1000) + 3600,
             iat: Math.floor(Date.now() / 1000)
         },
-        privateKey,
-        {
-            algorithm: 'RS256',
-            header: {
-                kid: privateKeyID,
-                typ: 'JWT',
-                alg: 'RS256'
-            }
-        }
-    );
+        secret: privateKey,
+        encoding: 'utf8'
+    });
     return request({
         form: {
             grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',

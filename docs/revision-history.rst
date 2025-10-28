@@ -21,6 +21,18 @@ There is no plan to deprecate this product.
         - Description
         - Date
 
+      * - 1.39.0
+        - Updated the documentation for Telemetry Streaming v1.39.0. This release contains the following changes: |br| * **Kafka** Consumer was updated to no longer ignore configurations when certificates data changed. |br| * grpc-js was updated to v1.9.15 that fixes issues with restnoded restarts when using gRPC with **OpenTelemetry_Exporter**.
+        - 09-02-25
+
+      * - 1.38.0
+        - Updated the documentation for Telemetry Streaming v1.38.0. This release contains the following changes: |br| * Removed "resolver" error when using gRPC with **OpenTelemetry_Exporter**. |br| * Fixed restnoded restarts when using gRPC with **OpenTelemetry_Exporter**.
+        - 07-22-25
+
+      * - 1.37.0
+        - Updated the documentation for Telemetry Streaming v1.37.0. This release contains the following changes: |br| * New configuration option **format:propertyBasedV2** for Azure Log Analytics consumer
+        - 10-28-24
+
       * - 1.36.0
         - Updated the documentation for Telemetry Streaming v1.36.0. This release contains the following changes: |br| * Drop support for BIG-IP 13.1 to 15.0.x |br| * New configuration options for Kafka consumer, support multi-host, data formatting |br| * iHealth Poller updated to follow new API authentication schema |br| * New configuration options for Telemetry System class |br| * New configuration options for Splunk consumer |br| * New **runtime.httpTimeout** option to configure timeout for incoming HTTP requests |br| |br| Changed: |br| * Event Listener performance bugfixes |br| |br| Issues Resolved: |br| * **memoryMonitor.provisionedMemory** should allow to provision up to **runtime.maxHeapSize** value
         - 08-14-24

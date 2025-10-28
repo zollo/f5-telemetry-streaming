@@ -21,7 +21,7 @@ const moduleCache = require('../shared/restoreCache')();
 
 const nock = require('nock');
 const sinon = require('sinon');
-const jwt = require('jsonwebtoken');
+const jws = require('jws');
 
 const assert = require('../shared/assert');
 const sourceCode = require('../shared/sourceCode');
@@ -165,7 +165,7 @@ describe('Google_Cloud_Monitoring', () => {
         loggerStub = coreStubs.logger;
         tracerStub = coreStubs.tracer;
         // Returned signed JWT in format: privateKeyId::privateKey
-        sinon.stub(jwt, 'sign').callsFake((_, secret, options) => `${options.header.kid}::${secret}`);
+        sinon.stub(jws, 'sign').callsFake(({ header, secret }) => `${header.kid}::${secret}`);
 
         context = testUtil.deepCopy(originContext);
         context.logger = logger.getChild('gcm');
