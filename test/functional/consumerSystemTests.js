@@ -1,5 +1,5 @@
 /**
- * Copyright 2024 F5, Inc.
+ * Copyright 2025 F5, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@
 
 'use strict';
 
+const constants = require('@f5-telemetry-tests/func-shared/constants');
 const fs = require('fs');
-
-const constants = require('./shared/constants');
-const harnessUtils = require('./shared/harness');
-const logger = require('./shared/utils/logger').getChild('cs');
-const miscUtils = require('./shared/utils/misc');
+const harnessUtils = require('@f5-telemetry-tests/func-shared/harness');
+const logger = require('@f5-telemetry-tests/func-shared/utils/logger').getChild('cs');
+const miscUtils = require('@f5-telemetry-tests/func-shared/utils/misc');
+const pathUtil = require('path');
 
 /**
  * @module test/functional/consumerSystemTests
@@ -65,7 +65,7 @@ function loadConsumers() {
         consumerFilter = (consumer) => includeFilter(consumer) && ignoreFilter(consumer);
     }
 
-    const consumerDir = constants.CONSUMERS_DIR;
+    const consumerDir = pathUtil.resolve(__dirname, 'consumersTests');
     const mapping = {};
 
     fs.readdirSync(consumerDir)

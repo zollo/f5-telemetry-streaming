@@ -1,0 +1,119 @@
+F5 Telemetry Streaming Functional Tests - npm Scripts Help Manual
+
+==================================================
+
+This document describes all available npm scripts defined in the test/functional package.json.
+
+REQUIREMENTS
+=====================
+
+- Node.JS v24+
+- NPM v11+
+
+INSTALLATION COMMANDS
+=====================
+
+ci:install
+----------
+Usage: npm run ci:install
+Description: Performs a clean, reproducible installation for CI/CD environments
+Purpose: Installs only production dependencies with locked versions from package-lock.json. Ignores all optional, peer and dev dependencies.
+When to use: In CI/CD pipelines, automated builds, or when you need exact reproducibility
+Notes: Uses npm ci which removes node_modules before installing; faster and more reliable than npm install
+
+deps:refresh
+------------
+Usage: npm run deps:refresh
+Description: Refreshes and updates production dependencies
+Purpose: Updates dependencies while maintaining production-only scope. Ignores all optional, peer and dev dependencies.
+When to use: When adding new production packages or updating existing ones
+Difference from ci:install: Uses npm install (allows updates) instead of npm ci (locked versions)
+
+CLEANUP COMMANDS
+================
+
+dev:cleanup
+-----------
+Usage: npm run dev:cleanup
+Description: Comprehensive cleanup of generated files and dependencies across the workspace
+Purpose: Resets the entire functional test workspace to a pristine state
+Actions Performed:
+  1. Removes ../artifacts directory (test artifacts and results)
+  2. Removes ./node_modules directory (all installed dependencies)
+  3. Iterates through ../packages/* and runs cleanup script in each subdirectory
+When to use:
+  - Before fresh installations
+  - After major branch switches
+  - When troubleshooting dependency issues
+  - To free up disk space
+  - Before creating distribution packages
+Post-cleanup: Run 'npm run ci:install' or 'npm install' to reinstall dependencies
+
+DOCUMENTATION COMMANDS
+======================
+
+help
+----
+Usage: npm run help
+Description: Displays this help manual
+Purpose: Shows all available npm scripts and their detailed usage information
+Output: Prints the content of ./scripts/npm/help.txt to the terminal
+
+TESTING COMMANDS
+================
+
+test
+----
+Usage: npm run test
+Description: Runs the complete functional test suite
+Purpose: Executes all functional tests using the test runner
+Test File: ./testRunner.js
+When to use: Primary command for running all functional tests
+Notes: This command runs all functional tests defined in `consumersTests` directory
+
+test:cloud:azure
+----------------
+Usage: npm run test:cloud:azure
+Description: Runs Azure-specific cloud functional tests
+Purpose: Executes functional tests targeting Azure cloud platform
+Test File: ./cloud/azureTests.js
+Prerequisites:
+  - Azure credentials configured
+  - Azure test environment available
+  - Network access to Azure resources
+
+test:cloud:aws
+--------------
+Usage: npm run test:cloud:aws
+Description: Runs AWS-specific cloud functional tests
+Purpose: Executes functional tests targeting AWS cloud platform
+Test File: ./cloud/awsTests.js
+Prerequisites:
+  - AWS credentials configured
+  - AWS test environment available
+  - Network access to AWS resources
+
+LIFECYCLE HOOKS
+===============
+
+postinstall
+-----------
+Usage: Runs automatically after npm install/npm ci
+Description: Executes post-installation setup tasks
+Script Location: ./scripts/npm/post-install.sh
+Purpose: Performs necessary configuration or setup after dependencies are installed
+When it runs: Automatically triggered after:
+  - npm install
+  - npm ci
+  - npm run ci:install
+  - npm run deps:refresh
+Notes:
+- Patches package-lock.json to use correct paths to local packages (NPM v6 compatibility)
+- Copies local packages to `./node_modules` directory to avoid problems with importing those packages (NPM v6 compatibility)
+- Removes all internal URLs from `package-lock.json` file
+
+
+DEVELOPMENT WORKFLOW
+====================
+
+From the project's root directory run `npm run ci:functest`. The only reason you may need to run `npm` from `test/functional` is to update packages.

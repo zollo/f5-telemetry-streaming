@@ -1,0 +1,131 @@
+F5 Telemetry Streaming - npm Scripts Help Manual
+
+==================================================
+
+This document describes all available npm scripts defined in the application' package.json.
+
+REQUIREMENTS
+=====================
+
+Following tools should be available in the environment if the developer want to verify changes locally:
+- Node.JS v8.11.1
+- NPM v6
+
+NOTE: you still can use up-to-date versions of tools, but verification should be done according to the list above.
+
+GENERAL COMMANDS
+================
+
+help
+----
+Usage: npm run help
+Description: Displays this help manual
+Purpose: Shows all available npm scripts and their usage
+
+audit:prod
+---------
+Usage: npm run audit:prod
+Description: Runs npm audit on application production dependencies OMLY
+Purpose: Security vulnerability checking for all packages
+Scope: Audits application production dependencies
+Runtime: any
+
+audit:dev
+---------
+Usage: npm run audit:dev
+Description: Runs npm audit on all application dependencies
+Purpose: Security vulnerability checking for all packages
+Scope: Audits all application dependencies
+Runtime: any
+
+dev:cleanup
+-----------
+Usage: npm run dev:cleanup
+Description: Resets the workspace by removing generated artifacts and caches
+Purpose: Ensures subsequent installs and builds start from a clean baseline
+Actions: Deletes node_modules/
+When to use: Before fresh builds, after large branch switches, prior to packaging/publishing, or when troubleshooting stale artifacts
+Notes: After cleanup, run npm ci or deps:refresh to reinstall dependencies
+
+INSTALLATION & DEPENDENCY COMMANDS
+===================================
+
+ci:install
+----------
+Usage: npm run ci:install
+Description: Installs application dependencies ONLY
+Requirements: Valid package-lock.json (or npm-shrinkwrap-lock.json) must exist.
+Runtime: any
+
+deps:refresh
+------------
+Usage: npm run deps:refresh
+Description: Installs/updates dependencies for the application package / directory ONLY.
+Note: This modifies package-lock.json (or npm-shrinkwrap.json) - commit changes after running
+Runtime: any
+
+LIFECYCLE HOOKS
+===============
+
+preinstall
+----------
+Usage: Runs automatically before npm install/npm ci
+Description: Executes pre-installtion setup tasks
+Script Location: ../scripts/npm/pre-install.sh
+Purpose: Performs necessary configuration or setup before dependencies are installed
+When it runs: Automatically triggered after:
+  - npm install
+  - npm ci
+  - npm run ci:install
+  - npm run deps:refresh
+Notes:
+- Check for node.js version
+
+postinstall (and postdeps:refresh)
+-----------
+Usage: Runs automatically after npm install/npm ci
+Description: Executes post-installation setup tasks
+Script Location: ../scripts/npm/post-install.sh
+Purpose: Performs necessary configuration or setup after dependencies are installed
+When it runs: Automatically triggered after:
+  - npm install
+  - npm ci
+  - npm run ci:install
+  - npm run deps:refresh
+Notes:
+- Removes all internal URLs from `package-lock.json` (or npm-shrinkwrap.json) file
+
+ADDING NEW PACKAGES
+===================
+
+The package.json file in the application directory contains production dependencies ONLY.
+
+To add a new production dependency:
+1. npm install --save <package-name>
+2. npm run deps:refresh (to update lock file)
+3. Commit both package.json and package-lock.json (or npm-shrinkwrap.json)
+
+IMPORTANT:
+
+For application dependencies package-lock.json (or npm-shrinkwrap.json) should have `version` equal to `2`.
+It will allow to use npm v6 + node.js v8.11.1 to build the RPM and run unit tests.
+
+So, let's say new package was added using node.js v12 + npm v8 then next steps should be:
+- swtich back to node.js 8.11.1 + npm v6
+- verify that package-lock.json (or npm-shrinkwrap-lock.json) has `version` set to `2`
+- run `npm run dev:cleanup`
+- run `npm run ci:install`
+- run `npm test` from the root directory
+- check that no unit test failed and coverage still the same
+
+
+SCRIPT NAMING CONVENTIONS
+==========================
+
+- audit:* - Commands for auditing dependencies
+- ci:* - Commands for CI/CD pipelines (reproducible, strict)
+- dev:* - Development utilities (cleanup, audit, etc.)
+- deps:* - Dependency management commands
+- test:* - Test execution commands
+
+For more information, see the project's README.md and contributing documentation.

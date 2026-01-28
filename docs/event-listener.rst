@@ -34,6 +34,17 @@ IMPORTANT:
 
 .. NOTE:: See :ref:`this troubleshooting entry<trace>` for information on how to write an Event Listener's incoming raw data to a trace file to assist with troubleshooting.
 
+.. _logconsiderations-ref:
+Considerations With High-Volume Logs
+--------------------------------------------
+
+When using Telemetry Streaming to collect high-volume logs (such as those for ASM events), consider the following:
+
+- Use HSL (High Speed Logging) for sending logs to the Event Listener. For more information, see :ref:`restlogpub`.
+- A high volume of incoming log data over a short period of time may affect performance, including dropped logs and significant memory consumption. Telemetry Streaming provides additionals option to fine tune memory management to better align with your expected log volume. For more information, see :ref:`Memory Management<memorymanagement>`.
+- Some Consumers may have their own limitations on the volume of data they can process (e.g. API limits including data size, number of requests in a given time range, etc).
+- Some Consumers may support configuration options that can help with processing and forwarding of high-volume logs (e.g. number of maximum connections, event batching, etc.). For more information, see the :ref:`specific Consumer section<settingupconsumer-ref>`.
+- Telemetry Streaming runs using `restnoded` within the BIG-IP system, and is ultimately subject to the same resource and platform constraints as other iApps LX applications.
 
 
 .. _logsrc-ref:

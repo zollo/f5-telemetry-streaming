@@ -1,5 +1,5 @@
 /**
- * Copyright 2024 F5, Inc.
+ * Copyright 2025 F5, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,9 @@
 const assert = require('assert');
 const fs = require('fs');
 
-// const base = require('../src/schema/latest/base_schema.json');
+// const base = require('../application/schema/latest/base_schema.json');
 
-const SCHEMA_DIR = `${__dirname}/../src/schema/latest`;
+const SCHEMA_DIR = `${__dirname}/../application/schema/latest`;
 const outputFile = `${__dirname}/../dist/ts.schema.json`;
 
 const safeTraverse = (pathArray, parentObject) => pathArray.reduce(

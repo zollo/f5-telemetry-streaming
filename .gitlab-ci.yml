@@ -1,10 +1,11 @@
-image: ${ATG_IMG_REGISTRY_URL}/node:16
+# see dev-support branch for more info about the image
+image: ${ATG_ARTIFACTORY_PUBLISH_URL}/${ATG_ARTIFACTORY_DOCKER_REPO}/f5-telemetry-streaming-rpm-builder-image:v1.9
 
 stages:
     - lint
     - atg-shared-checks
-    - test
     - build
+    - test
     - doc
     - deploy
     - functional test
@@ -20,7 +21,8 @@ include:
     file: security/base.gitlab-ci.yml
 
 variables:
-  FORCE_DOCS_STAGGING:
+  SECRETS_ANALYZER_VERSION: '5.1.16'
+  FORCE_DOCS_STAGING:
     value: "false"
     options:
       - "false"
@@ -43,7 +45,7 @@ variables:
     docs_only:
         rules:
             - if: $CI_COMMIT_BRANCH =~ /^docs/
-            - if: $FORCE_DOCS_STAGGING == "true"
+            - if: $FORCE_DOCS_STAGING == "true"
     not_docs:
         rules:
             - if: $CI_COMMIT_BRANCH !~ /^docs/
@@ -54,30 +56,27 @@ variables:
               when: never
             - !reference [.rules_config, not_docs, rules]
 
+.set_npm_registry: &set_npm_registry
+- npm config set registry "${ATG_ARTIFACTORY_NPM_DEFAULT_REGISTRY}"
 
-.run_unittest_cmd: &run_unittest_cmd
-- npm run test-only
+.install_node_8_11_1: &install_node_8_11_1
+- volta install --verbose --very-verbose node@8.11.1 npm@6.14.18
+- echo "Node.JS version $(node --version), NPM version $(npm --version)"
+- test "$(node --version)" = "v8.11.1"
+- test "$(npm --version)" = "6.14.18"
 
 .install_unittest_packages_cmd: &install_unittest_packages_cmd
-- nodeFullVer=$(node --version)
-- echo "**** Node.js version - $nodeFullVer (bundled with npm@$(npm --version)) ****"
-- ver=$(echo $nodeFullVer | cut -d. -f 1)
-- installNPM=no
-- if [ "$ver" = "v8" ]; then
--   installNPM=6
-- elif [ "$ver" = "v10" ] || [ "$ver" = "v12" ] || [ "$ver" = "v14" ]; then
--   installNPM=7
-- fi
-- if [ "$installNPM" != "no" ]; then
--   echo "Updating npm to '${installNPM}'"
--   npm install --global npm@"${installNPM}"
--   echo "**** Installed npm@$(npm --version)) ****"
-- fi
-- npm run install-test
+- *install_node_8_11_1
+- npm run ci:develop
 
 .job_definition: &job_definition
     tags:
         - docker-executor
+    before_script:
+        - source ~/.bashrc
+        - volta list all
+        - echo "Node.JS version $(node --version), NPM version $(npm --version)"
+        - *set_npm_registry
     rules:
         - !reference [.rules_config, not_docs, rules]
 
@@ -89,22 +88,8 @@ variables:
 .harness_deployment_definition: &harness_deployment_definition
     image: ${CICD_CONTAINER_DEPLOY}
     tags:
-        - cm-official-docker-executor
-        # - atg-telemetry-streaming-docker
+        - atg-telemetry-streaming-docker-vio
  
-.run_unittest:
-    extends:
-        - .test_job_definition
-    script:
-        - *install_unittest_packages_cmd
-        - *run_unittest_cmd
-    artifacts:
-        name: ${CI_COMMIT_REF_NAME}_unittests_artifacts
-        paths:
-            - test/artifacts
-        when: on_failure
-        expire_in: 3 days
-
 .base_azure: &base_azure
     tags:
         - docker-executor
@@ -178,68 +163,75 @@ variables:
 lint:
     extends:
         - .test_job_definition
-    image: ${ATG_IMG_REGISTRY_URL}/node:14
     stage: lint
     script:
-        - *install_unittest_packages_cmd
+        - npm run ci:develop
+        - npm run ci:functest
         - npm run lint
 
-secret_detection:
-  stage: atg-shared-checks
-  variables:
-    CI_DEFAULT_BRANCH: "${CI_COMMIT_BRANCH}"
-    GL_SECRET_DETECTION_CONFIG_SOURCE: "/gitleaks.toml"
-    GL_SECRET_DETECTION_CONFIG_TARGET: "gl-gitleaks.toml"
-    GL_SECRET_DETECTION_REPORT: "gl-secret-detection-report.json"
-    SECRET_DETECTION_HISTORIC_SCAN: "false"
-    SECRET_DETECTION_EXCLUDED_PATHS: ""
-  allow_failure: false
-  before_script:
-    - apk add jq
-    - cp ${GL_SECRET_DETECTION_CONFIG_SOURCE} ${GL_SECRET_DETECTION_CONFIG_TARGET}
-  script:
-    - /analyzer run
-    - if [[ $(cat ${GL_SECRET_DETECTION_REPORT} | jq '.vulnerabilities | length > 0') == "true" ]]; then exit 1; fi
-  artifacts:
-    paths:
-      - ${GL_SECRET_DETECTION_CONFIG_TARGET}
-      - ${GL_SECRET_DETECTION_REPORT}
-    reports:
-      secret_detection: ${GL_SECRET_DETECTION_REPORT}
-    when: always
-
-# BIG-IP 14.1+
 test_node8:
     extends:
-        - .run_unittest
-    image: ${ATG_IMG_REGISTRY_URL}/node:8.11.1
+        - .test_job_definition
+    script:
+        - *install_unittest_packages_cmd
+        - npm run test:unit
+    artifacts:
+        name: ${CI_COMMIT_REF_NAME}_unittests_artifacts
+        paths:
+            - test/artifacts
+        when: on_failure
+        expire_in: 3 days
     rules:
         - !reference [.rules_config, skip_unit_feat_brach, rules]
 
-# packages audit
-npm_audit:
-    image: ${ATG_IMG_REGISTRY_URL}/node:22
+test_rpm:
     extends:
         - .test_job_definition
-    allow_failure: true
     script:
-        # install jq
-        - apt-get update
-        - apt-get install -y jq
-        # install node modules
-        - *install_unittest_packages_cmd
-        # npm list - ignore errors, interested in audit errors only
-        - npm list --json || echo ""
-        - npm outdated || echo ""
-        # npm audit - install includes audit, but perform specific check and fail if needed
-        - audit_report=$(npm audit --production --json) || echo ""
+        - *install_node_8_11_1
+        - rpm -ivh ./dist/f5-telemetry-*.rpm
+        - bash ./scripts/npm/copy-test-to-dir.sh "/var/config/rest/iapps" "$(pwd)"
+        - cd /var/config/rest/iapps
+        - mv f5-telemetry application
+        - npm run ci:unit
+        - RPM_TESTING=1 npm run test:unit
+    artifacts:
+        name: ${CI_COMMIT_REF_NAME}_unittests_artifacts
+        paths:
+            - test/artifacts
+        when: on_failure
+        expire_in: 3 days
+    rules:
+        - !reference [.rules_config, skip_unit_feat_brach, rules]
+
+
+# prod packages audit
+npm_audit:
+    extends:
+        - .test_job_definition
+    script:
+        - audit_report=$(npm run --silent --prefix ./application audit:prod) || echo ""
         - echo "$audit_report"
         - vulnerabilities=$(echo $audit_report | jq .vulnerabilities | jq length)
         - if [ $vulnerabilities -ne 0 ]; then echo 'ERROR! vulnerabilities exist'; exit 1; fi
 
+# dev packages audit
+npm_audit_dev:
+    extends:
+        - .test_job_definition
+    script:
+        - npm run audit:all
+
+# list all outdated packages
+npm_outdated:
+    extends:
+        - .test_job_definition
+    allow_failure: true
+    script:
+        - npm run ci:all
+        - npm run outdated:all
+
 coverage:
-    # bind to 14.1+ version to test @grppc-js and OpenTelemetry
-    image: ${ATG_IMG_REGISTRY_URL}/node:8.11.1
     extends:
         - .test_job_definition
     script:
@@ -253,11 +245,11 @@ coverage:
         - !reference [.rules_config, skip_unit_feat_brach, rules]
 
 build_rpm:
-    image: ${ATG_ARTIFACTORY_PUBLISH_URL}/${ATG_ARTIFACTORY_DOCKER_REPO}/f5-telemetry-streaming-rpm-builder-image:v1.2
     extends:
         - .job_definition
     stage: build
     script:
+        - *install_node_8_11_1
         - npm run build
     tags:
         - cm-official-docker-executor
@@ -295,7 +287,7 @@ build_docs:
         - !reference [.rules_config, docs_only, rules]
 
 ##############################################################
-# BEGIN VIO                                                  #
+# BEGIN OpenStack                                            #
 ##############################################################
 
 deploy_env:
@@ -311,7 +303,7 @@ deploy_env:
         variables:
             - $REQ_DEVICE_PIPELINE == "true"
     script:
-        - $SHELL ./scripts/functional_testing/vio/setup.sh
+        - $SHELL ./test/functional/scripts/vio/setup.sh
 
 test_functional:
     stage: functional test
@@ -337,9 +329,9 @@ test_functional:
         - fi
         - echo "Harness data - ${TEST_HARNESS_FILE}"
         - ls ./dist -ls
-        # really only need dev dependencies
-        - *install_unittest_packages_cmd
-        - npm run test-functional
+        - *set_npm_registry
+        - npm run ci:functest
+        - npm run test:functional
 
 # should be executed manually to remove the harness
 teardown_env:
@@ -351,10 +343,11 @@ teardown_env:
         variables:
             - $REQ_DEVICE_PIPELINE == "true"
     script:
-        - $SHELL ./scripts/functional_testing/vio/teardown.sh
+        - cd test/functional
+        - $SHELL ./test/functional/scripts/vio/teardown.sh
 
 ##############################################################
-# END VIO                                                    #
+# END Open Stack                                             #
 ##############################################################
 ##############################################################
 # BEGIN CLOUD                                                #
@@ -365,8 +358,9 @@ deploy_env_azure:
     extends:
         - .deploy_azure
     script:
+        - cd test/functional
         - mkdir -p './deploy_output'
-        - source ./scripts/functional_testing/azure/deploy_env.sh
+        - source ./scripts/azure/deploy_env.sh
 
 test_functional_azure:
     extends:
@@ -375,8 +369,8 @@ test_functional_azure:
         - source ./deploy_output/azure.sh
         - echo $AZURE_VM_HOSTNAME
         - echo $AZURE_VM_IP
-        - *install_unittest_packages_cmd
-        - npm run test-functional-cloud-azure
+        - npm run ci:functest
+        - npm run test:cloud:azure
     needs:
         - build_rpm
         - deploy_env_azure
@@ -385,15 +379,17 @@ teardown_env_azure:
     extends:
         - .teardown_azure
     script:
-        - source ./scripts/functional_testing/azure/teardown_env.sh
+        - cd test/functional
+        - source ./scripts/azure/teardown_env.sh
 
 # Azure Gov
 deploy_env_azure_gov:
     extends:
         - .deploy_azure
     script:
+        - cd test/functional
         - mkdir -p './deploy_output_gov'
-        - source ./scripts/functional_testing/azure/deploy_env.sh 'gov'
+        - source ./scripts/azure/deploy_env.sh 'gov'
 
 test_functional_azure_gov:
     extends:
@@ -402,8 +398,8 @@ test_functional_azure_gov:
         - source ./deploy_output_gov/azure_gov.sh
         - echo $AZURE_VM_HOSTNAME
         - echo $AZURE_VM_IP
-        - *install_unittest_packages_cmd
-        - npm run test-functional-cloud-azure
+        - npm run ci:functest
+        - npm run test:cloud:azure
     needs:
         - build_rpm
         - deploy_env_azure_gov
@@ -412,14 +408,16 @@ teardown_env_azure_gov:
     extends:
         - .teardown_azure
     script:
-        - source ./scripts/functional_testing/azure/teardown_env.sh 'gov'
+        - cd test/functional
+        - source ./scripts/azure/teardown_env.sh 'gov'
 
 deploy_env_aws:
     extends:
         - .base_aws
         - .deploy_cloud
     script:
-        - source ./scripts/functional_testing/aws/deploy_env.sh
+        - cd test/functional
+        - source ./scripts/aws/deploy_env.sh
     artifacts:
         paths:
             - env_metadata
@@ -432,15 +430,16 @@ test_functional_aws:
     stage: functional test
     script:
         - source ./env_metadata/aws.sh
-        - *install_unittest_packages_cmd
-        - npm run test-functional-cloud-aws
+        - npm run ci:functest
+        - npm run test:cloud:aws
 
 teardown_env_aws:
     extends:
         - .base_aws
         - .teardown_cloud
     script:
-        - source ./scripts/functional_testing/aws/teardown_env.sh
+        - cd test/functional
+        - source ./scripts/aws/teardown_env.sh
 
 ##############################################################
 # END CLOUD                                                  #

@@ -1,0 +1,156 @@
+F5 Telemetry Streaming Unit Tests - npm Scripts Help Manual
+
+==================================================
+
+This document describes all available npm scripts defined in the test/unit package.json.
+
+REQUIREMENTS
+=====================
+
+- Node.JS v8.11.1
+- NPM v6
+
+NOTE: you still can use up-to-date versions of tools, but verification should be done according to the list above.
+
+INSTALLATION COMMANDS
+=====================
+
+ci:install
+----------
+Usage: npm run ci:install
+Description: Performs a clean, reproducible installation for CI/CD environments
+Purpose: Installs only production dependencies with locked versions from package-lock.json. Ignores all optional, peer and dev dependencies.
+When to use: In CI/CD pipelines, automated builds, or when you need exact reproducibility
+Notes:
+- Uses npm ci which removes node_modules before installing; faster and more reliable than npm install.
+- See `postinstall` for details.
+
+deps:refresh
+------------
+Usage: npm run deps:refresh
+Description: Refreshes and updates production dependencies
+Purpose: Updates dependencies while maintaining production-only scope. Ignores all optional, peer and dev dependencies.
+When to use: When adding new production packages or updating existing ones
+Difference from ci:install: Uses npm install (allows updates) instead of npm ci (locked versions)
+Runtime: node.js v12+ and npm v8+
+Notes: See `postinstall` for details.
+
+CLEANUP COMMANDS
+================
+
+dev:cleanup
+-----------
+Usage: npm run dev:cleanup
+Description: Comprehensive cleanup of generated files and dependencies across the workspace
+Purpose: Resets the entire test workspace to a pristine state
+Actions Performed:
+  1. Removes ../artifacts directory (unit and functional tests related artifacts)
+  2. Removes ./coverage directory (test coverage reports)
+  3. Removes ./node_modules directory (all installed dependencies)
+  4. Removes ./nyc_output directory (coverage tool cache)
+  5. Iterates through ../packages/* and runs cleanup script in each subdirectory
+When to use:
+  - Before fresh installations
+  - After major branch switches
+  - When troubleshooting dependency issues
+  - To free up disk space
+  - Before creating distribution packages
+Post-cleanup: Run 'npm run ci:install' or 'npm install' to reinstall dependencies
+
+DOCUMENTATION COMMANDS
+======================
+
+help
+----
+Usage: npm run help
+Description: Displays this help manual
+Purpose: Shows all available npm scripts and their detailed usage information
+Output: Prints the content of ./scripts/npm/help.txt to the terminal
+
+TESTING COMMANDS
+================
+
+test
+----
+Usage: npm run test [options]
+Description: Runs the test suite using the run-tests.sh script
+Purpose: Executes unit tests with customizable options
+Options: Pass the shell script arguments after '--' separator (e.g., npm run test -- coverage)
+When to use: Primary command for running tests during development
+
+test:coverage
+-------------
+Usage: npm run test:coverage
+Description: Runs the test suite with code coverage reporting enabled
+Purpose: Executes all tests and generates comprehensive coverage reports
+Implementation: Calls 'npm run test -- coverage' internally
+When to use:
+  - Before submitting pull requests
+  - To verify test coverage for new features
+  - During code reviews
+  - To identify untested code paths
+
+LIFECYCLE HOOKS
+===============
+
+preinstall
+----------
+Usage: Runs automatically before npm install/npm ci
+Description: Executes pre-installtion setup tasks
+Script Location: ../scripts/npm/pre-install.sh
+Purpose: Performs necessary configuration or setup before dependencies are installed
+When it runs: Automatically triggered after:
+  - npm install
+  - npm ci
+  - npm run ci:install
+  - npm run deps:refresh
+Notes:
+- Check for node.js version
+
+postinstall
+-----------
+Usage: Runs automatically after npm install/npm ci
+Description: Executes post-installation setup tasks
+Script Location: ./scripts/post-install.sh
+Purpose: Performs necessary configuration or setup after dependencies are installed
+When it runs: Automatically triggered after:
+  - npm install
+  - npm ci
+  - npm run ci:install
+  - npm run deps:refresh
+Notes:
+- Clones GitHub repo to install correct OTEL protos required for testing
+- Patches package-lock.json to use correct paths to local packages (NPM v6 compatibility)
+- Copies local packages to `./node_modules` directory to avoid problems with importing those packages (NPM v6 compatibility)
+- Removes all internal URLs from `package-lock.json` file
+
+ADDING NEW PACKAGES
+===================
+
+To add a new production dependency:
+1. npm install --save <package-name>
+2. npm run deps:refresh (to update lock file)
+3. Commit both package.json and package-lock.json
+
+To add a new dev dependency:
+1. npm install --save-dev <package-name>
+2. npm run deps:refresh (to update lock file)
+3. Commit both package.json and package-lock.json
+
+IMPORTANT:
+
+package-lock.json should have `version` equal to `2`.
+It will allow to use npm v6 + node.js v8.11.1 to run testing in CI/CD environment.
+
+So, let's say new package was added using node.js v12 + npm v8 then next steps should be:
+- swtich back to node.js 8.11.1 + npm v6
+- verify that package-lock.json has `version` set to `2`
+- run `npm run dev:cleanup`
+- run `npm run ci:install`
+- run `npm test`
+- check that no unit test failed and coverage still the same
+
+DEVELOPMENT WORKFLOW
+====================
+
+From the project's root directory run `npm run ci:develop`. The only reason you may need to run `npm` from `test/unit` is to update packages.

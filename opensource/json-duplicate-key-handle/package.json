@@ -10,12 +10,23 @@
   "dependencies": {
     "backslash": "^0.2.0"
   },
-  "homepage": "https://github.com/KhanhTrinh2094/json-duplicate-key-handl",
+  "$devDependencies": {
+    "chai": "^3.5.0",
+    "gulp": "^3.9.1",
+    "gulp-mocha": "^2.2.0",
+    "mocha": "^2.4.5"
+  },
+  "homepage": "https://github.com/KhanhTrinh2094/json-duplicate-key-handle",
   "keywords": [
     "jsonhandler",
     "json",
     "handle",
     "duplicate"
+  ],
+  "files": [
+    "index.js",
+    "LICENSE",
+    "package.json"
   ],
   "license": "MIT",
   "main": "index.js",

@@ -10,6 +10,12 @@
             "cipherText": "yourPrivateKey"
     	},
         "privateKeyId": "yourPrivateKeyId",
-        "serviceEmail": "yourServiceEmail"
+        "serviceEmail": "yourServiceEmail",
+        "customOpts": [
+            { "name": "keepAlive", "value": true },
+            { "name": "keepAliveMsecs", "value": 30000 },
+            { "name": "maxSockets", "value": 30 },
+            { "name": "maxFreeSockets", "value": 30 }
+        ]
     }
 }

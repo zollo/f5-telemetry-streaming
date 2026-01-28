@@ -1,0 +1,45 @@
+{
+    "name": "@f5-telemetry-tests/unit-shared",
+    "version": "1.41.0-1",
+    "author": "F5, Inc.",
+    "license": "Apache-2.0",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/F5Networks/f5-telemetry-streaming.git",
+        "directory": "test/packages/unit-shared"
+    },
+    "engines": {
+        "node": ">=8.11.1",
+        "npm": ">=6"
+    },
+    "scripts": {
+        "cleanup": "rm -rf ./node_modules"
+    },
+    "dependencies": {
+        "@f5-telemetry-tests/common": "file:../common",
+        "chai": "^4",
+        "chai-as-promised": "^7",
+        "eventemitter2": "^6",
+        "lodash": "^4",
+        "mocha": "^7",
+        "memfs": "4.39.0",
+        "nock": "^11",
+        "sinon": "^15",
+        "uuid": "9.0.1"
+    },
+    "overrides": {
+        "sinon": {
+            "nise": "5.1.4",
+            "@sinonjs/samsam": "8.0.0"
+        }
+    },
+    "comments": {
+        "dependencies": {
+            "memfs": "4.39.0 is the last version known to work fine with Node 8.11.1",
+            "sinon": {
+                "nise": "5.1.4 is the last version known to work fine with Node 8.11.1",
+                "@sinonjs/samsam": "8.0.0 is the last version known to work fine with Node 8.11.1"
+            }
+        }
+    }
+}

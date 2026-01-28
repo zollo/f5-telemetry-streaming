@@ -21,6 +21,14 @@ There is no plan to deprecate this product.
         - Description
         - Date
 
+      * - 1.41.0
+        - Updated the documentation for Telemetry Streaming v1.41.0. This release contains the following changes: |br| * Fixed aws-sdk `JavaScript AWS SDK v2 users should add validation to the region parameter value <https://github.com/advisories/GHSA-j965-2qgj-vjmq>`_ |br| * Added: Allow customers to configure HTTP agent options for Google Cloud Consumers |br| * Fixed: Google Cloud Consumer's possible race condition on attempt to get auth token |br| * Fixed: Google Cloud Consumers should not create metricDescriptor explicitly instead include metric's kind and type in a timeSeries payload |br| * Update npm packages
+        - 01-28-26
+
+      * - 1.40.0
+        - Updated the documentation for Telemetry Streaming v1.40.0. This release contains the following changes: |br| * Resolved CVEs found in third-party dependencies.
+        - 10-28-25
+
       * - 1.39.0
         - Updated the documentation for Telemetry Streaming v1.39.0. This release contains the following changes: |br| * **Kafka** Consumer was updated to no longer ignore configurations when certificates data changed. |br| * grpc-js was updated to v1.9.15 that fixes issues with restnoded restarts when using gRPC with **OpenTelemetry_Exporter**.
         - 09-02-25
@@ -139,7 +147,7 @@ There is no plan to deprecate this product.
         - 09-01-20
 
       * - 1.13.0
-        - Updated the documentation for Telemetry Streaming v1.13.0. This release contains the following changes: |br| * Added **statusReason** and **monitorStatus** fields to System Poller output for BIG-IQ Analytics (see :ref:`sysinfo`) |br| * Added comprehensive troubleshooting entry for why data may not be showing up in a consumer (see :ref:`Troubleshooting<nodata>`) |br| * Updated the Event Listener page (see :doc:`event-listener`) |br| |br| Issues Resolved: |br| * Fixed inconsistency in GSLB output: return empty object instead of 'undefined' |br| * Fixed Azure consumer memory leak when calling metadata service on an instance where it is unavailable |br| * Updated Azure Log Analytics dashboard example (`GitHub #39 <https://github.com/F5Networks/f5-telemetry-streaming/issues/39>`_) |br| * Fixed lodash `Prototype Pollution vulnerability <https://www.npmjs.com/advisories/1523>`_ |br| * Fixed Splunk legacy format missing poolMemberStat data
+        - Updated the documentation for Telemetry Streaming v1.13.0. This release contains the following changes: |br| * Added **statusReason** and **monitorStatus** fields to System Poller output for BIG-IQ Analytics (see :ref:`sysinfo`) |br| * Added comprehensive troubleshooting entry for why data may not be showing up in a consumer (see :ref:`Troubleshooting<nodata>`) |br| * Updated the Event Listener page (see :doc:`event-listener`) |br| |br| Issues Resolved: |br| * Fixed inconsistency in GSLB output: return empty object instead of 'undefined' |br| * Fixed Azure consumer memory leak when calling metadata service on an instance where it is unavailable |br| * Updated Azure Log Analytics dashboard example (`GitHub #39 <https://github.com/F5Networks/f5-telemetry-streaming/issues/39>`_) |br| * Fixed lodash `Prototype Pollution vulnerability <https://github.com/advisories/GHSA-p6mc-m468-83gw>`_ |br| * Fixed Splunk legacy format missing poolMemberStat data
         - 07-21-20
 
       * - 1.12.0
@@ -151,11 +159,11 @@ There is no plan to deprecate this product.
         - 04-24-20
 
       * - 1.11.0
-        - Updated the documentation for Telemetry Streaming v1.11.0. This release contains the following changes: |br| * Added a new consumer for Azure Application Insights (see :ref:`appinsight-ref`) |br| * Added support for Azure Managed Identities for :ref:`Azure Log Analytics<mi>` and :ref:`Azure Application Insights<miappin>` |br| * Added support for AzureGov for Azure consumers using an optional region property (see :ref:`region`) |br| * Added a new page for the Pull consumer (see :ref:`pullconsumer-ref`) and renamed the original Consumer page to Push consumer |br| * Added a new page detailing how to delete the configuration produced by TS (see :doc:`deleting-ts-config`) |br| * Renamed Google StackDriver to Google Cloud Monitoring |br| |br| Issues Resolved: |br| * Fixed `Regular Expression Denial of Service vulnerability <https://www.npmjs.com/advisories/1488>`_ and improved start up time on node v4.x and v6.x |br| * Fixed error when Splunk consumer (configured with 'legacy' format) tries to forward event from Event Listener (`GitHub #30 <https://github.com/F5Networks/f5-telemetry-streaming/issues/30>`_) |br| * Fixed crash in Kafka consumer on attempt to close idle connections to brokers (`GitHub #17 <https://github.com/F5Networks/f5-telemetry-streaming/issues/17>`_) 
+        - Updated the documentation for Telemetry Streaming v1.11.0. This release contains the following changes: |br| * Added a new consumer for Azure Application Insights (see :ref:`appinsight-ref`) |br| * Added support for Azure Managed Identities for :ref:`Azure Log Analytics<mi>` and :ref:`Azure Application Insights<miappin>` |br| * Added support for AzureGov for Azure consumers using an optional region property (see :ref:`region`) |br| * Added a new page for the Pull consumer (see :ref:`pullconsumer-ref`) and renamed the original Consumer page to Push consumer |br| * Added a new page detailing how to delete the configuration produced by TS (see :doc:`deleting-ts-config`) |br| * Renamed Google StackDriver to Google Cloud Monitoring |br| |br| Issues Resolved: |br| * Fixed `Regular Expression Denial of Service vulnerability <https://github.com/advisories/GHSA-6chw-6frg-f759>`_ and improved start up time on node v4.x and v6.x |br| * Fixed error when Splunk consumer (configured with 'legacy' format) tries to forward event from Event Listener (`GitHub #30 <https://github.com/F5Networks/f5-telemetry-streaming/issues/30>`_) |br| * Fixed crash in Kafka consumer on attempt to close idle connections to brokers (`GitHub #17 <https://github.com/F5Networks/f5-telemetry-streaming/issues/17>`_) 
         - 04-21-20
 
       * - 1.10.0
-        - Updated the documentation for Telemetry Streaming v1.10.0. This release contains the following changes: |br| * Added a feature (currently EXPERIMENTAL) for configuring custom endpoints (see :doc:`custom-endpoints`) |br| * Added **ifAnyMatch** functionality to the existing value-based matching logic (see :ref:`valuebased`) |br| * Added support for F5 devices with multiple hosts (see the :ref:`FAQ<viprion>`)  |br| |br| Issues Resolved: |br| * Event Listener unable to classify AFM DoS event |br| * Splunk legacy tmstats - include last_cycle_count |br| * Splunk legacy tmstats - add tenant and application data |br| * Declarations with large secrets may timeout |br| * Passphrases should be obfuscated in consumer trace files |br| * Add 'profiles' data (profiles attached to Virtual Server) to 'virtualServers' |br| * Use baseMac instead of hostname to fetch CM device (`GitHub Issue 26 <https://github.com/F5Networks/f5-telemetry-streaming/pull/26>`_) |br| * cipherText validation when protected by SecureVault |br| * Caching data about the host device to speed up declaration processing
+        - Updated the documentation for Telemetry Streaming v1.10.0. This release contains the following changes: |br| * Added a feature (currently EXPERIMENTAL) for configuring custom endpoints (see :doc:`custom-endpoints`) |br| * Added **ifAnyMatch** functionality to the existing value-based matching logic (see :ref:`valuebased`) |br| * Added support for F5 devices with multiple hosts (see the :ref:`FAQ<viprion>`)  |br| |br| Issues Resolved: |br| * Event Listener unable to classify AFM DoS event |br| * Splunk legacy tmstats - include last_cycle_count |br| * Splunk legacy tmstats - add tenant and application data |br| * Declarations with large secrets may timeout |br| * Passphrases should be obfuscated in consumer trace files |br| * Add 'profiles' data (profiles attached to Virtual Server) to 'virtualServers' |br| * Use baseMac instead of hostname to fetch CM device (`GitHub Issue 26 <https://github.com/F5Networks/f5-telemetry-streaming/issues/26>`_) |br| * cipherText validation when protected by SecureVault |br| * Caching data about the host device to speed up declaration processing
         - 03-10-20
 
       * - 1.9.0
@@ -217,7 +225,7 @@ There is no plan to deprecate this product.
 
 .. |schemalink| raw:: html
 
-   <a href="https://github.com/F5Networks/f5-telemetry-streaming/tree/master/src/schema" target="_blank">schema files</a>
+   <a href="https://github.com/F5Networks/f5-telemetry-streaming/tree/master/application/schema" target="_blank">schema files</a>
 
 .. |supportmd| raw:: html
 

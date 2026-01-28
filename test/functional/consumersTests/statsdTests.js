@@ -1,5 +1,5 @@
 /**
- * Copyright 2024 F5, Inc.
+ * Copyright 2025 F5, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,16 @@
 
 'use strict';
 
-const chai = require('chai');
-const chaiAsPromised = require('chai-as-promised');
+const assert = require('@f5-telemetry-tests/func-shared/assert');
+const constants = require('@f5-telemetry-tests/func-shared/constants');
 const deepDiff = require('deep-diff');
+const harnessUtils = require('@f5-telemetry-tests/func-shared/harness');
+const miscUtils = require('@f5-telemetry-tests/func-shared/utils/misc');
+const promiseUtils = require('@f5-telemetry-tests/func-shared/utils/promise');
+const rootDir = require('@f5-telemetry-tests/common/rootdir');
+const testUtils = require('@f5-telemetry-tests/func-shared/testUtils');
 
-const constants = require('../shared/constants');
-const DEFAULT_HOSTNAME = require('../../../src/lib/constants').DEFAULT_HOSTNAME;
-const harnessUtils = require('../shared/harness');
-const miscUtils = require('../shared/utils/misc');
-const promiseUtils = require('../shared/utils/promise');
-const testUtils = require('../shared/testUtils');
-
-chai.use(chaiAsPromised);
-const assert = chai.assert;
+const DEFAULT_HOSTNAME = rootDir.appImport('lib/constants').DEFAULT_HOSTNAME;
 
 /**
  * @module test/functional/consumersTests/statsd

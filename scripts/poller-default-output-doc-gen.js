@@ -1,5 +1,5 @@
 /**
- * Copyright 2024 F5, Inc.
+ * Copyright 2025 F5, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,8 @@
 
 const fs = require('fs');
 
-const endpoints = require('../src/lib/paths.json').endpoints;
-const stats = require('../src/lib/properties.json').stats;
+const endpoints = require('../application/lib/paths.json').endpoints;
+const stats = require('../application/lib/properties.json').stats;
 
 const ENDPOINT_KEY_SEP = '::';
 const IGNORE_PROPERTIES = ['tmstats'];

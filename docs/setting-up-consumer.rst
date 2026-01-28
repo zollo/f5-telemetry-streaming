@@ -303,7 +303,7 @@ In BIG-IP TS 1.18 and later, the root certificates for AWS services are now embe
 
 Additions to the AWS CloudWatch consumer
 ````````````````````````````````````````
-The following items have been added to the CloudWatch consumer since it was introduced.
+The following items have been added (or changed) to the CloudWatch consumer since it was introduced.
 
 
 .. list-table::
@@ -313,6 +313,10 @@ The following items have been added to the CloudWatch consumer since it was intr
       * - BIG-IP TS Version
         - Property
         - Description
+  
+      * - 1.41
+        - **region**
+        - This required property for AWS CloudWatch (Logs and Metrics) now does validation against pre-defined list of AWS regions.
   
       * - 1.25
         - **endpointUrl**
@@ -395,7 +399,7 @@ The root certificates for AWS services are embedded within F5 BIG-IP Telemetry S
 
 Additions to the AWS S3 consumer
 ````````````````````````````````
-The following items have been added to the S3 consumer since it was introduced.
+The following items have been added (or changed) to the S3 consumer since it was introduced.
 
 
 .. list-table::
@@ -405,6 +409,10 @@ The following items have been added to the S3 consumer since it was introduced.
       * - BIG-IP TS Version
         - Property
         - Description
+  
+      * - 1.41
+        - **region**
+        - This required property for AWS CloudWatch (Logs and Metrics) now does validation against pre-defined list of AWS regions.
   
       * - 1.25
         - **endpointUrl**
@@ -495,7 +503,7 @@ The following items have been added to the Kafka consumer since it was introduce
   
       * - 1.17
         - **privateKey**
-        - This and the following properties provide the ability to add TLS client authentication to the Kafka consumer using the **TLS** authentication protocol.  This protocol configures BIG-IP Telemetry Streaming to provide the required private key and certificate(s) when the Kafka broker is configured to use SSL/TLS Client authentication.  You can find more information on Kafka's client authentication on the Confluent pages:  https://docs.confluent.io/platform/current/kafka/authentication_ssl.html |br| |br| **privateKey** is the Private Key for the SSL certificate. Must be formatted as a 1-line string, with literal new line characters. 
+        - This and the following properties provide the ability to add TLS client authentication to the Kafka consumer using the **TLS** authentication protocol.  This protocol configures BIG-IP Telemetry Streaming to provide the required private key and certificate(s) when the Kafka broker is configured to use SSL/TLS Client authentication.  You can find more information on Kafka's client authentication on the Confluent pages:  https://docs.confluent.io/platform/current/security/authentication/mutual-tls/overview.html |br| |br| **privateKey** is the Private Key for the SSL certificate. Must be formatted as a 1-line string, with literal new line characters. 
 
       * - 
         - **clientCertificate**
@@ -778,6 +786,10 @@ The following items have been added to the Google Cloud Operations Suite's Cloud
         - **reportInstanceMetadata**
         - This property allows you to enable or disable metadata reporting.  The default is **false**.
 
+      * - 1.41
+        - **customOpts**
+        - Customization options.  Be sure to see :ref:`http-agent-options` in the Troubleshooting section for information on the **customOpts** property.
+
 
 **IMPORTANT**: The following declaration includes the additional properties shown in the table. If you attempt to use this declaration on a previous version, it will fail. On previous versions, remove the highlighted line(s), and the comma from the previous line. 
 
@@ -833,6 +845,25 @@ For complete information, see the |gcldocs|.
 **Finding the Data**  |br|
 Once you have configured the Google Cloud Logging consumer and sent a BIG-IP Telemetry Streaming declaration, BIG-IP Telemetry Streaming sends log entries directly to Google Cloud Logging. Log entries are written to a *logName* in Google Cloud Logging, where the logName is generated from the properties in the BIG-IP Telemetry Streaming declaration, using the following format: ``[logScope]/[logScopeId/logs/[logId] (example: “projects/yourProjectId/logs/yourLogId”)``.
 
+
+Additions to the Cloud Monitoring consumer
+``````````````````````````````````````````
+The following items have been added to the Google Cloud Operations Suite's Cloud Monitoring consumer since it was introduced.
+
+
+.. list-table::
+      :widths: 25 25 200
+      :header-rows: 1
+
+      * - BIG-IP TS Version
+        - Property
+        - Description
+
+      * - 1.41
+        - **customOpts**
+        - Customization options.  Be sure to see :ref:`http-agent-options` in the Troubleshooting section for information on the **customOpts** property.
+
+'
 Example Declaration:
 
 .. literalinclude:: ../examples/declarations/consumers/Google_Cloud_Logging/google_cloud_logging.json
@@ -1182,7 +1213,7 @@ In the following table, we list the Azure Government regions.
    :alt: Splunk
 
 .. |azure_img| image:: /images/azure_logo.png
-   :target: https://docs.microsoft.com/en-us/azure/azure-monitor/log-query/log-query-overview
+   :target: https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-query-overview
    :alt: Microsoft Azure
 
 .. |azure_log_analytics_dashboard| image:: /images/azure_log_analytics_dashboard.png
@@ -1224,7 +1255,7 @@ In the following table, we list the Azure Government regions.
    :alt: fluentd
 
 .. |Google Cloud| image:: /images/google_logo.png
-   :target: https://cloud.google.com/products/operations
+   :target: https://cloud.google.com/products/observability
    :alt: Google Cloud
 
 .. |datadog| image:: /images/dd_logo.png
@@ -1297,7 +1328,7 @@ In the following table, we list the Azure Government regions.
 
 .. |sddocs| raw:: html
 
-   <a href="https://cloud.google.com/products/operations" target="_blank">Google Operations suite documentation</a>
+   <a href="https://cloud.google.com/products/observability" target="_blank">Google Operations suite documentation</a>
 
 .. |br| raw:: html
    

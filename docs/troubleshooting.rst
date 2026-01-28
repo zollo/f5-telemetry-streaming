@@ -108,6 +108,8 @@ HTTP Agent Options
 While BIG-IP Telemetry Streaming is processing data, you can configure it to use customized configuration for HTTP transport.
 Node.js values may differ based on version used. Refer to node.js documentation for more information.
 
+.. NOTE:: Some of Telemetry_Consumer implementations may support custom HTTP agent options. Refer to specific consumer documentation for more information.
+
 .. code-block:: json
 
     {

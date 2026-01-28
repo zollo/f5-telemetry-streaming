@@ -1,5 +1,5 @@
 /**
- * Copyright 2024 F5, Inc.
+ * Copyright 2025 F5, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +16,19 @@
 
 'use strict';
 
-const chai = require('chai');
-const chaiAsPromised = require('chai-as-promised');
+const assert = require('@f5-telemetry-tests/func-shared/assert');
+const constants = require('@f5-telemetry-tests/func-shared/constants');
 const fs = require('fs');
+const harnessUtils = require('@f5-telemetry-tests/func-shared/harness');
+const logger = require('@f5-telemetry-tests/func-shared/utils/logger').getChild('dutTests');
+const miscUtils = require('@f5-telemetry-tests/func-shared/utils/misc');
 const pathUtil = require('path');
+const promiseUtils = require('@f5-telemetry-tests/func-shared/utils/promise');
 const readline = require('readline');
+const rootDir = require('@f5-telemetry-tests/common/rootdir');
+const testUtils = require('@f5-telemetry-tests/func-shared/testUtils');
 
-const constants = require('./shared/constants');
-const DEFAULT_UNNAMED_NAMESPACE = require('../../src/lib/constants').DEFAULT_UNNAMED_NAMESPACE;
-const harnessUtils = require('./shared/harness');
-const logger = require('./shared/utils/logger').getChild('dutTests');
-const miscUtils = require('./shared/utils/misc');
-const promiseUtils = require('./shared/utils/promise');
-const testUtils = require('./shared/testUtils');
-
-chai.use(chaiAsPromised);
-const assert = chai.assert;
+const DEFAULT_UNNAMED_NAMESPACE = rootDir.appImport('lib/constants').DEFAULT_UNNAMED_NAMESPACE;
 
 /**
  * @module test/functional/dutTests

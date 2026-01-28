@@ -2,7 +2,7 @@
 
 Appendix A: Schema Reference
 ============================
-This page is a reference for the objects you can use in your Declarations for Telemetry Streaming. For more information on BIG-IP objects and terminology, see the BIG-IP documentation at https://support.f5.com/csp/home.
+This page is a reference for the objects you can use in your Declarations for Telemetry Streaming. For more information on BIG-IP objects and terminology, see the BIG-IP documentation at https://my.f5.com/manage/s/.
 Please note: this reference document is currently a work in progress.
 
 allowSelfSignedCert

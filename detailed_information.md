@@ -172,7 +172,7 @@ Note: More information about using the HEC can be found on the Splunk website [h
 
 ### Azure Log Analytics
 
-Website: [https://docs.microsoft.com/en-us/azure/azure-monitor/log-query/log-query-overview](https://docs.microsoft.com/en-us/azure/azure-monitor/log-query/log-query-overview).
+Website: [https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-query-overview](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-query-overview).
 
 Required information:
 
