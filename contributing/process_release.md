@@ -23,13 +23,13 @@
 * Make sure RC branch has actual release version and build numbers. **Note:** atg-build bumps the build number (e.g. to get first build vX.Y.Z-1, you must set package and package-lock to vX.Y.Z-0). Check the following files and do corrections if needed:
   * [package.json](package.json)
   * [package-lock.json](package-lock.json)
-  * [src/schema/latest/base_schema.json](src/schema/latest/base_schema.json)
+  * [application/schema/latest/base_schema.json](application/schema/latest/base_schema.json)
   * [contributing/README.md](contributing/README.md) (example of response, optional)
   * do simple `grep` in repository to ensure that no unexpected files with old version left
-  * A new directory should be added for the new release version (same files that are in [src/schema/latest](src/schema/latest) go here)
+  * A new directory should be added for the new release version (same files that are in [application/schema/latest](application/schema/latest) go here)
   * There should be exact same files across following directories:
-    * [src/schema/latest](src/schema/latest)
-    * `src/schema/X.Y.Z` - where X.Y.Z is release version
+    * [application/schema/latest](application/schema/latest)
+    * `application/schema/X.Y.Z` - where X.Y.Z is release version
 * Update [SUPPORT.md](SUPPORT.md) if not yet done (or at least check that everything looks valid):
   * add new version to the list of `Currently supported versions` with appropriate dates
   * remove no longer supported versions from `Currently supported versions` and add it to `Versions no longer supported`
@@ -72,6 +72,7 @@
     * 1.38.0 - 20.4 MB
     * 1.39.0 - 21.5 MB
     * 1.40.0 - 21.9 MB
+    * 1.41.0 - 22.1 MB
   * Install build to BIG-IP, navigate to folder `/var/config/rest/iapps/f5-telemetry/` and check following:
     * Run `du -sh` and check that folder's size (shouldn't be much greater than previous versions):
       * 1.4.0 - 65 MB
@@ -110,6 +111,7 @@
       * 1.38.0 - 160 MB
       * 1.39.0 - 160 MB
       * 1.40.0 - 161 MB
+      * 1.41.0 - 162 MB
     * Check `node_modules` folder - if you see `eslint`, `mocha` or something else from [package.json](package.json) `devDependencies` section - something wrong with build process. Probably some `npm` flags are work as not expected and it MUST BE FIXED before publishing.
 * Ensure that all tests (unit tests and functional tests passed)
 * Optional: Ensure that your local tags match remote. If not, remove all and re-fetch:
@@ -133,9 +135,9 @@ Following list of changes should be done for both master/develop and LTS branche
 * Update [SUPPORT.md](SUPPORT.md) - set release type "LTS" and update support dates for LTS release
 * Update [CHANGELOG.md](CHANGELOG.md) - add *Promoted to LTS* to **Changed** section
 * Schema changes:
-  * Create new folder for LTS version (with name X.Y.Z) in [src/schema](src/schema)
+  * Create new folder for LTS version (with name X.Y.Z) in [application/schema](application/schema)
   * All schemas that are "newer" than LTS release should be updated to support LTS version. Update *base_schema.json* file only for each applicable version
-  * **LTS branch only** - update [src/schema/latest](src/schema/latest) to match LTS schema
+  * **LTS branch only** - update [application/schema/latest](application/schema/latest) to match LTS schema
 
 ## Release process
 
@@ -174,7 +176,7 @@ Following list of changes should be done for both master/develop and LTS branche
       * [package.json](package.json)
       * [package-lock.json](package-lock.json)
     * to X.Y.0
-      * [src/schema/latest/base_schema.json](src/schema/latest/base_schema.json)
+      * [application/schema/latest/base_schema.json](application/schema/latest/base_schema.json)
       * [contributing/README.md](contributing/README.md) (example of response, optional)
       * [docs/conf.py](docs/conf.py)
   * Add a new version section to [CHANGELOG.md](CHANGELOG.md)

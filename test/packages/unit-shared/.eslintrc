@@ -1,0 +1,11 @@
+{
+    "settings": {
+        "import/resolver": {
+            "node": {
+                "paths": [
+                    "test/unit/node_modules"
+                ]
+            }
+        }
+    }
+}

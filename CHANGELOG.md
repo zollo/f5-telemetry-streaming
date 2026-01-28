@@ -7,6 +7,19 @@ Changes to this project are documented in this file. More detail and links can b
 ### Changed
 ### Removed
 
+## 1.41.0
+### Added
+- AUTOTOOL-4947: Google Cloud Consumers: Allow customers to configure HTTP agent options
+### Fixed
+- Update npm packages (@cypress/request from 3.0.9 to 3.0.10, lodash form 4.17.21 to 4.17.23, pako from 1.0.11 to to 2.1.0)
+- AUTOTOOL-4947: Google Cloud Consumers: Possible race condition on attempt to get auth token
+- AUTOTOOL-4947: Google Cloud Consumers: Do not create metricDescriptor explicitly instead include metric's kind and type in a timeSeries payload
+- Fix [JavaScript AWS SDK v2 users should add validation to the region parameter value](https://github.com/advisories/GHSA-j965-2qgj-vjmq). AWS_S3 and AWS_CloudWatch consumers are require users to use a valid region value.
+### Changed
+- Repo restructured to isolate production and dev dependencies
+- Added unit testing for RPM package to verify no dependecies missed
+### Removed
+
 ## 1.40.0
 ### Added
 - Add integration testing to verify compatibility with latest ElasticSearch versions - v8.x and 9.x
@@ -397,7 +410,7 @@ Changes to this project are documented in this file. More detail and links can b
 - AUTOTOOL-1192: Fix inconsistency in GSLB output: return empty object instead of 'undefined'
 - AUTOTOOL-1639: Fix Azure consumer memory leak when calling metadata service on an instance where it is unavailable
 - AUTOTOOL-1503: [GitHub #39](https://github.com/F5Networks/f5-telemetry-streaming/issues/39): Update Azure Log Analytics dashboard example
-- AUTOTOOL-1695: Fix lodash [Prototype Pollution vulnerability](https://www.npmjs.com/advisories/1523)
+- AUTOTOOL-1695: Fix lodash [Prototype Pollution vulnerability](https://github.com/advisories/GHSA-p6mc-m468-83gw)
 - AUTOTOOL-1694: Fix Splunk legacy format missing poolMemberStat data
 
 ### Changed
@@ -432,7 +445,7 @@ Changes to this project are documented in this file. More detail and links can b
 - AUTOTOOL-768: Enable support of AzureGov for Azure consumers and optional region property
 
 ### Fixed
-- AUTOTOOL-1334: Fix [Regular Expression Denial of Service vulnerability](https://www.npmjs.com/advisories/1488) and improve start up time on node v4.x and v6.x
+- AUTOTOOL-1334: Fix [Regular Expression Denial of Service vulnerability](https://github.com/advisories/GHSA-6chw-6frg-f759) and improve start up time on node v4.x and v6.x
 - AUTOTOOL-1150: [GitHub #30](https://github.com/F5Networks/f5-telemetry-streaming/issues/30) Fix error when Splunk consumer (configured with 'legacy' format) tries to forward event from Event Listener
 - AUTOTOOL-491: [GitHub #17](https://github.com/F5Networks/f5-telemetry-streaming/issues/17) Fix crash in Kafka consumer on attempt to close idle connections to brokers
 - AUTOTOOL-1265: Reduce data copying in System Stats
@@ -457,7 +470,7 @@ Changes to this project are documented in this file. More detail and links can b
 - AUTOTOOL-1128: Declarations with large secrets may timeout
 - AUTOTOOL-1154: Passphrases should be obfuscated in consumer trace files
 - AUTOTOOL-1147: Add 'profiles' data (profiles attached to Virtual Server) to 'virtualServers'
-- AUTOTOOL-896: [GitHub #26](https://github.com/F5Networks/f5-telemetry-streaming/pull/26): Use baseMac instead of hostname to fetch CM device
+- AUTOTOOL-896: [GitHub #26](https://github.com/F5Networks/f5-telemetry-streaming/issues/26): Use baseMac instead of hostname to fetch CM device
 - AUTOTOOL-1160: cipherText validation when protected by SecureVault
 - AUTOTOOL-1239: Caching data about the host device to speed up declaration processing
 

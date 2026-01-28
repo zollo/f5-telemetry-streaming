@@ -23,7 +23,7 @@ The telemetry streaming system includes a number of key components, listed below
 ---
 ### Diagram
 
-![diagram](images/diagram.png)
+![diagram](diagram.png)
 
 ---
 ### Anatomy of a Request
@@ -108,7 +108,7 @@ How does the project handle a typical `POST` request?
             "trace": false,
             "format": "default"
         },
-        "schemaVersion": "1.40.0"
+        "schemaVersion": "1.41.0"
     }
 }
 ```
@@ -119,15 +119,15 @@ How does the project handle a typical `POST` request?
 What happens in the system internals between request and response?
 
 - LX worker receives request which validates URI, etc.
-    - ref: [restWorker.js](../src/nodejs/restWorker.js)
+    - ref: [restWorker.js](../application/nodejs/restWorker.js)
 - The appropriate handler processes the request
-    - ref: [REST API](../src/lib/restAPI)
+    - ref: [REST API](../application/lib/restAPI)
 - Request is validated using JSON schema and AJV, config event fires
-    - ref: [config.js](../src/lib/config.js)
+    - ref: [config.js](../application/lib/config.js)
 - System poller, event listener, etc. configures system resources
-    - ref: [systemPoller](../src/lib/systemPoller), [eventListener](../src/lib/eventListener/), etc.
+    - ref: [systemPoller](../application/lib/systemPoller), [eventListener](../application/lib/eventListener/), etc.
 - Client response sent with validated config
-    - ref: [declareHandler](../src/lib/restAPI/handlers/declare.js)
+    - ref: [declareHandler](../application/lib/restAPI/handlers/declare.js)
     ```javascript
         return promise.then((config) => {
             this.code = 200;
@@ -154,20 +154,20 @@ Ok, overview done!  Now let's dive into the major areas to be aware of as a deve
 ---
 ### Core modules
 
-All core modules are included inside `../src/lib/`
+All core modules are included inside `../application/lib/`
 
-- [restWorker.js](../src/nodejs/restWorker.js)
+- [restWorker.js](../application/nodejs/restWorker.js)
     - Purpose: Hook for incoming HTTP requests
-- [config.js](../src/lib/config.js)
+- [config.js](../application/lib/config.js)
     - Purpose: Handle configuration actions... such as validation, persistent storage, etc.
-- [systemPoller](../src/lib/systemPoller/)
+- [systemPoller](../application/lib/systemPoller/)
     - Purpose: Handles CRUD-like actions for any system pollers required based on client configuration
-    - Related: See [iHealthPoller](../src/lib/ihealth/)
-- [eventListener](../src/lib/eventListener/)
+    - Related: See [iHealthPoller](../application/lib/ihealth/)
+- [eventListener](../application/lib/eventListener/)
     - Purpose: Handles CRUD-like actions for any event listeners required based on client configuration.
-- [consumers](../src/lib/consumers/)
+- [consumers](../application/lib/consumers/)
     - Purpose: Handles load/unload actions for any consumers required based on client configuration. Consumers must exist in `consumers` directory, see [Adding a New Consumer](#adding-a-new-consumer)
-- [dataPipeline](../src/lib/dataPipeline/)
+- [dataPipeline](../application/lib/dataPipeline/)
     - Purpose: Handles calling each loaded consumer when an event is ready for forwarding (system poller event, event listener event, etc.)
 
 ---
@@ -179,7 +179,7 @@ Adding stats to the system poller is a frequent activity, below describes the co
 
 Collect the raw data from the device by adding a new endpoint to the paths configuration file.
 
-[Paths.json](../src/lib/paths.json)
+[Paths.json](../application/lib/paths.json)
 
 *Basic Example:*
 
@@ -212,7 +212,7 @@ Collect the raw data from the device by adding a new endpoint to the paths confi
 
 Enable and define how the data should look by adding a new key under *stats* in the properties configuration file.
 
-[Properties.json](../src/lib/properties.json)
+[Properties.json](../application/lib/properties.json)
 
 *Basic Example:*
 
@@ -313,7 +313,7 @@ This context data is defined on the same level as *stats* in the properties conf
 
 ---
 #### Adding System Poller Stats - Conditional blocks
-Some stats may only be available in certain conditions, for example on BIG-IP v13+.  This is the list of functions available inside the `"if"` block.  These functions should exist inside [systemStats.js](../src/lib/systemStats.js).
+Some stats may only be available in certain conditions, for example on BIG-IP v13+.  This is the list of functions available inside the `"if"` block.  These functions should exist inside [systemStats.js](../application/lib/systemStats.js).
 
 *deviceVersionGreaterOrEqual:* Function to compare current device's version against provided one.
 ```javascript
@@ -338,10 +338,10 @@ Some stats may only be available in certain conditions, for example on BIG-IP v1
 
 Adding a new consumer involves two "simple" steps:
 
-- Add a new plugin to ../src/lib/consumers
-- Add any new configuration properties to the consumer [schema](../src/schema/latest/consumer_schema.json)
+- Add a new plugin to ../application/lib/consumers
+- Add any new configuration properties to the consumer [schema](../application/schema/latest/consumer_schema.json)
 
-Additional information about adding a new consumer plugin can be found in the [consumer readme](../src/lib/consumers/README.md)
+Additional information about adding a new consumer plugin can be found in the [consumer readme](../application/lib/consumers/README.md)
 
 ---
 ### Testing methodology
@@ -360,7 +360,7 @@ Build/publish makes heavy use of GitLab and [.gitlab-ci.yml](../.gitlab-ci.yml).
 *Local development build process*: Various strategies exist here, see the following for an inexhaustive list.
 
 - Build locally using `buildRpm.sh` or similar, copy RPM to BIG-IP
-- VS Code `tasks.json` to copy `src/` files to BIG-IP and run `restart restnoded`
+- VS Code `tasks.json` to copy `application/` files to BIG-IP and run `restart restnoded`
 - Matthe Zinke's ICRDK [development kit](https://github.com/f5devcentral/f5-icontrollx-dev-kit/blob/master/README.md)
 - Vim on BIG-IP (enough said, you know who you are)
 
@@ -380,8 +380,8 @@ See the [INTERNAL_README.md](../INTERNAL_README.md) for an internal explanation 
 ### Development
 
 Local environment requirements:
-- NodeJS - any version, but for verifying unit tests v8.11.1 is required.
-- npm - any version, but for verifying unit tests v6 is required (compatible with node.js v8.11.1)
+- NodeJS - any version, but to verify unit tests v8.11.1 is required.
+- npm - any version, but to verify unit tests v6 is required (compatible with node.js v8.11.1)
 
 To make everyday live easier you may start to use tools like `volta` or `nvm`.
 
@@ -393,8 +393,8 @@ volta install node@8.11.1 && volta install npm@6
 
 Some packages has newer versions that dropped support for node@8 - TS should use older version (despite the type of package - dev or prod). In this case those packages may have vulnerabilities that will be never fixed. We can try to contribute to the corresponding project/package but it is unlikle the fix will be accepted for such old version. In this case add note(s) to package.json file - see **comments** section for examples.
 
-Some `devDependencies`, e.g. **mocha**, **nyc**, intentionally pinned to older versions to avoid additional manipulations at CI/CD time or local envrionment.
+- [application/package.json](../application/package.json) should have ONLY production dependencies. No `devDependecies` at all.
+- [test/unit/package.json](../test/unit/package.json) should have ONLY dependecies related to unit tests.
+- [test/functional/package.json](../test/functional/package.json) should have ONLY dependecies related to functional / integration tests.
 
-`devDependencies` that are unique for `functional` testing only, e.g. **ssh2**, may use the version that applicable for `functional` testing evnrionment only.
-
-When installing new package be sure that `package-lock.json` was generated with version `2`.
+When installing new package be sure that `package-lock.json` (or `npm-shrinkwrap.json`) was generated with version `2`.

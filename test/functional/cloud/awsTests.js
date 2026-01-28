@@ -1,5 +1,5 @@
 /**
- * Copyright 2024 F5, Inc.
+ * Copyright 2025 F5, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,23 +16,20 @@
 
 'use strict';
 
-const chai = require('chai');
-const chaiAsPromised = require('chai-as-promised');
-
-const awsUtil = require('../shared/cloudUtils/aws');
-const awsSrcUtil = require('../../../src/lib/consumers/shared/awsUtil');
-const harnessUtils = require('../shared/harness');
-const logger = require('../shared/utils/logger').getChild('awsCloudTests');
-const miscUtils = require('../shared/utils/misc');
-const promiseUtils = require('../shared/utils/promise');
-const testUtils = require('../shared/testUtils');
-
-chai.use(chaiAsPromised);
-const assert = chai.assert;
+const assert = require('@f5-telemetry-tests/func-shared/assert');
+const awsUtil = require('@f5-telemetry-tests/func-shared/cloudUtils/aws');
+const harnessUtils = require('@f5-telemetry-tests/func-shared/harness');
+const logger = require('@f5-telemetry-tests/func-shared/utils/logger').getChild('awsCloudTests');
+const miscUtils = require('@f5-telemetry-tests/func-shared/utils/misc');
+const promiseUtils = require('@f5-telemetry-tests/func-shared/utils/promise');
+const rootDir = require('@f5-telemetry-tests/common/rootdir');
+const testUtils = require('@f5-telemetry-tests/func-shared/testUtils');
 
 /**
  * @module test/functional/cloud/awsTests
  */
+
+const awsSrcUtil = rootDir.appImport('lib/consumers/shared/awsUtil');
 
 logger.info('Initializing harness info');
 const harnessInfo = awsUtil.getCloudHarnessJSON();

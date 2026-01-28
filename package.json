@@ -1,6 +1,6 @@
 {
-    "name": "f5-telemetry",
-    "version": "1.40.0-1",
+    "name": "f5-telemetry-root-dir",
+    "version": "1.41.0-1",
     "author": "F5, Inc.",
     "license": "Apache-2.0",
     "repository": {
@@ -8,100 +8,54 @@
         "url": "git+https://github.com/F5Networks/f5-telemetry-streaming.git"
     },
     "engines": {
-        "node": ">=8.11.1"
+        "node": ">=8.11.1",
+        "npm": ">=6"
     },
     "scripts": {
-        "install-production": "npm ci --production --no-optional",
-        "install-test": "npm ci --no-optional",
-        "postinstall-test": "./scripts/build/post-install-test.sh",
-        "lint": "eslint src test",
-        "test-functional": "mocha \"./test/functional/testRunner.js\" --opts ./test/functional/.mocha.opts",
-        "test-functional-cloud-azure": "mocha \"./test/functional/cloud/azureTests.js\" --opts ./test/functional/.mocha.opts",
-        "test-functional-cloud-aws": "mocha \"./test/functional/cloud/awsTests.js\" --opts ./test/functional/.mocha.opts",
-        "test-mutation": "stryker run",
-        "test-only-all": "./scripts/tests/unit-tests.sh",
-        "test-only": "SMOKE_TESTING=1 ./scripts/tests/unit-tests.sh",
-        "test-specific": "mocha --opts ./test/unit/.mocha.opts",
-        "test-specific-coverage": "nyc --all npm run test-specific",
-        "test": "SMOKE_TESTING=1 ./scripts/tests/unit-tests.sh coverage",
-        "test-all": "./scripts/tests/unit-tests.sh coverage",
-        "build": "./scripts/build/buildRpm.sh"
-    },
-    "nyc": {
-        "reporter": [
-            "html",
-            "text",
-            "json-summary"
-        ],
-        "include": [
-            "src/**"
-        ]
-    },
-    "dependencies": {
-        "@cypress/request": "3.0.9",
-        "@f5devcentral/f5-teem": "1.6.1",
-        "@grpc/grpc-js": "1.9.15",
-        "@grpc/proto-loader": "^0.7.8",
-        "@opentelemetry/api": "1.4.1",
-        "@opentelemetry/exporter-metrics-otlp-grpc": "0.41.2",
-        "@opentelemetry/exporter-metrics-otlp-http": "0.41.2",
-        "@opentelemetry/exporter-metrics-otlp-proto": "0.41.2",
-        "@opentelemetry/sdk-metrics": "1.30.1",
-        "ajv": "6.12.6",
-        "ajv-keywords": "3.5.2",
-        "applicationinsights": "1.8.10",
-        "aws-sdk": "2.1018.0",
-        "eventemitter2": "6.4.9",
-        "google-auth-library": "6.1.6",
-        "heap": "0.2.7",
-        "jmespath": "0.16.0",
-        "json-duplicate-key-handle": "file:opensource/json-duplicate-key-handle",
-        "jws": "4.0.0",
-        "kafka-node": "5.0.0",
-        "lodash": "4.17.21",
-        "machina": "4.0.2",
-        "mustache": "4.2.0",
-        "pako": "1.0.11",
-        "prom-client": "11.0.0",
-        "statsd-client": "0.4.7",
-        "tiny-request-router": "1.2.2",
-        "uuid": "9.0.1"
+        "audit:all": "exitCode=0; for prefix in ./ application test/unit test/functional; do npm --prefix \"${prefix}\" run audit:dev || exitCode=1; done; exit $exitCode",
+        "audit:dev": "npm audit --json | node ./scripts/npm/better-npm-audit.js",
+        "audit:prod": "npm --prefix application run ${npm_lifecycle_event}",
+        "build": "./scripts/npm/build.sh",
+        "ci:all": "npm ci && npm run ci:develop && npm run ci:functest",
+        "ci:application": "npm --prefix application run ci:install",
+        "ci:develop": "npm ci && npm run ci:application && npm run ci:unit",
+        "ci:functest": "npm --prefix test/functional run ci:install",
+        "ci:unit": "npm --prefix test/unit run ci:install",
+        "deps:refresh": "npm install",
+        "dev:cleanup": "rm -rf ./coverage ./node_modules ./nyc_output",
+        "dev:cleanup:all": "for prefix in ./ application test/unit test/functional; do npm --prefix \"${prefix}\" run dev:cleanup || exitCode=1; done; exit $exitCode",
+        "help": "cat ./scripts/npm/help.txt",
+        "lint": "eslint application test",
+        "outdated:all": "exitCode=0; for prefix in ./ application test/unit test/functional test/packages/common test/packages/func-shared test/packages/unit-shared; do echo \"List of outdated packages for '${prefix}':\"; npm --prefix \"${prefix}\" outdated || exitCode=1; echo \"\n\n\"; done; exit $exitCode",
+        "postinstall": "./scripts/npm/post-install.sh",
+        "test": "npm run test:coverage",
+        "test:cloud:azure": "npm --prefix test/functional run ${npm_lifecycle_event}",
+        "test:cloud:aws": "npm --prefix test/functional run ${npm_lifecycle_event}",
+        "test:coverage": "./scripts/npm/run-unit-tests.sh",
+        "test:functional": "npm --prefix test/functional run test",
+        "test:unit": "./scripts/npm/run-unit-tests.sh",
+        "version": "./scripts/npm/version.sh"
     },
     "devDependencies": {
         "@f5devcentral/eslint-config-f5-atg": "^0.1.8",
-        "chai": "4.5.0",
-        "chai-as-promised": "7.1.2",
-        "deep-diff": "1.0.2",
         "eslint": "8.57.1",
         "eslint-config-airbnb-base": "15.0.0",
         "eslint-plugin-import": "2.32.0",
-        "icrdk": "git+https://git@github.com/f5devcentral/f5-icontrollx-dev-kit.git#master",
-        "memfs": "4.38.2",
-        "mocha": "7.2.0",
-        "nock": "11.9.1",
-        "nyc": "14.1.1",
-        "proxyquire": "2.1.3",
-        "sinon": "15.2.0",
-        "ssh2": "0.8.9",
-        "winston": "2.4.7"
+        "eslint-import-resolver-node": "0.3.9"
     },
     "overrides": {
-        "@cypress/request": {
-            "tough-cookie": "4.1.4"
+        "@eslint/eslintrc": {
+            "js-yaml": "4.1.1"
         },
-        "@grpc/proto-loader": {
-            "long": "5.2.5"
-        },
-        "aws-sdk": {
-            "xml2js": "0.6.2"
-        },
-        "sinon": {
-            "nise": "5.1.4",
-            "@sinonjs/samsam": "8.0.0"
+        "eslint": {
+            "js-yaml": "4.1.1"
         }
     },
     "eslintConfig": {
         "extends": "@f5devcentral/eslint-config-f5-atg",
+        "ignorePatterns": [
+            "opensource/"
+        ],
         "parserOptions": {
             "ecmaVersion": 2018
         },
@@ -114,32 +68,8 @@
         }
     },
     "comments": {
-        "dependencies": {
-            "@grpc/grpc-js": "This package dropped support for older node versions. Use 1.9.15 for Node v8. Small chance v1.10.x may work, but not tested.",
-            "@grpc/proto-loader": "Should match same version as @grpc/grpc-js to avoid having multiple versions.",
-            "ajv": "This package dropped support for older node versions and requires the ajv package to be recompiled. Use v6.X.Y for Node v4.",
-            "ajv-keywords": "This package documents that v3 should be used when using ajv v6",
-            "applicationinsights": "This package requires Node v8 in 2.0.0+ as it now includes OpenTelemetry packages. Use v1.X.Y for Node v4.",
-            "aws-sdk": "This package dropped support for older node versions. Use 2.1018.0 for Node < v10.",
-            "google-auth-library": "This package is used for GRPC connection, supports node v10 and above, but fromJSON function works in node v8.11.1 - should use v6.1.X only",
-            "json-duplicate-key-handle": "This package is included locally to track updates and/or vulnerabilities. Included version is v1.0.0",
-            "kafka-node": "This package dropped support for older node versions. Use v2.X.Y for Node v4.",
-            "prom-client": "This package dropped support for older node versions. Use v11.X.Y for Node v4. Cannot go higher than 11.0.0 because of syntax failures on test_node4."
-        },
         "devDependencies": {
-            "@f5devcentral/eslint-config-f5-atg": "This package is updated on as-needed basis due to the work overhead.",
-            "@sinonjs/samsam": "This package dropped support for older node versions. Use v8.0.0 for Node v8. Required to enable mocha tests.",
-            "@sinonjs/fake-timers": "This package dropped support for older node versions. Use 11.2.2 for Node v8. Required to enable mocha tests.",
-            "chai": "This package dropped support for older node versions. Use v4.X.Y for Node v8.",
-            "mocha": "This package dropped support for older node versions. Use v7.2.0 for Node v8.",
-            "nock": "This package dropped support for older node versions. Use v11.X.Y for Node v8.",
-            "nyc": "This package dropped support for older node versions. Use v14.X.Y for Node v8.",
-            "sinon": "This package dropped support for older node versions. Use v15.X.Y for Node v8.",
-            "ssh2": "This packaged dropped support for older node versions. Use v0.X.Y for Node >= v5.2 and <= v10.16",
-            "winston": "This package dropped support for older node versions. Use v3.5.1 for Node v8."
+            "@f5devcentral/eslint-config-f5-atg": "This package is updated on as-needed basis due to the work overhead."
         }
-    },
-    "buildtimestamp": "buildtimestamp",
-    "gitbranch": "gitbranch",
-    "githash": "githash"
+    }
 }

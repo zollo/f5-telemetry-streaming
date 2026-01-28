@@ -48,5 +48,5 @@ If you need to release docs from `develop` branch:
 
 NOTE:
 
-You can published docs to internal GitLab Page at any time to review your changes by kicking-off CI/CD pipeline and setting `FORCE_DOCS_STAGGING` env variable to `true`
+You can published docs to internal GitLab Page at any time to review your changes by kicking-off CI/CD pipeline and setting `FORCE_DOCS_STAGING` env variable to `true`
 

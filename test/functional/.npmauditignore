@@ -1,0 +1,7 @@
+[
+    {
+        "id": "https://github.com/advisories/GHSA-j965-2qgj-vjmq",
+        "package": "aws-sdk",
+        "reason": "Affects functional testing only! Will be fixed later by updating aws-sdk to v3"
+    }
+]

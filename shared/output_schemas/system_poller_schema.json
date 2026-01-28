@@ -168,7 +168,7 @@
             "allOf": [
                 {
                     "if": {
-                        "properties": { "version": { "pattern": "^1[4-9]" } }
+                        "properties": { "version": { "type": "string", "pattern": "^1[4-9]" } }
                     },
                     "then": {
                         "required": [

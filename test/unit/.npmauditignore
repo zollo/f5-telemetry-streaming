@@ -1,0 +1,12 @@
+[
+    {
+        "id": "https://github.com/advisories/GHSA-j965-2qgj-vjmq",
+        "package": "aws-sdk",
+        "reason": "Affects functional testing only! Will be fixed later by updating aws-sdk to v3"
+    },
+    {
+        "id": "https://github.com/advisories/GHSA-73rr-hh4g-fpgx",
+        "package": "diff/jsdiff",
+        "reason": "No way to safely update diff/jsdiff at the moment due to dependency tree constraints and be sure everything works as expected."
+    }
+]

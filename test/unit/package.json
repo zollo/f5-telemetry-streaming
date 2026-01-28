@@ -1,0 +1,85 @@
+{
+    "name": "@f5-telemetry-tests/unit",
+    "version": "1.41.0-1",
+    "author": "F5, Inc.",
+    "license": "Apache-2.0",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/F5Networks/f5-telemetry-streaming.git",
+        "directory": "test/unit"
+    },
+    "engines": {
+        "node": ">=8.11.1"
+    },
+    "scripts": {
+        "audit:dev": "npm audit --json | node ../../scripts/npm/better-npm-audit.js",
+        "ci:install": "npm ci --production --no-optional --omit=dev --omit=optional --omit=peer --install-links",
+        "deps:refresh": "npm install --omit=dev --omit=optional --omit=peer --install-links",
+        "dev:cleanup": "rm -rf ../artifacts ./coverage ./node_modules ./nyc_output test-stats.json && cd ../packages && for dir in $(ls -d ./*/); do npm --prefix ${dir} run cleanup; done",
+        "help": "cat ./scripts/npm/help.txt",
+        "preinstall": "../../scripts/npm/pre-install.sh",
+        "postinstall": "./scripts/npm/post-install.sh",
+        "test": " ./scripts/npm/run-tests.sh",
+        "test:coverage": "npm run test -- coverage"
+    },
+    "nyc": {
+        "cwd": "../..",
+        "ignore": [
+            "application/opensource"
+        ],
+        "include": [
+            "application/**"
+        ],
+        "reporter": [
+            "html",
+            "text",
+            "json-summary"
+        ]
+    },
+    "dependencies": {
+        "@f5-telemetry-tests/common": "file:../packages/common",
+        "@f5-telemetry-tests/unit-shared": "file:../packages/unit-shared",
+        "lodash": "^4.17.23",
+        "memfs": "4.39.0",
+        "mocha": "^7",
+        "nock": "^11",
+        "nyc": "^14",
+        "proxyquire": "^2",
+        "sinon": "^15",
+        "uuid": "9.0.1",
+        "winston": "^2"
+    },
+    "mocha": {
+        "reporter": "./reporter.js",
+        "require": "./bootstrap.js",
+        "timeout": 600000
+    },
+    "overrides": {
+        "debug": "4.4.3",
+        "js-yaml": "3.14.2",
+        "minimatch": "3.0.5",
+        "mocha": {
+            "yargs-unparser": {
+                "flat": "5.0.2"
+            }
+        },
+        "nyc": {
+            "foreground-child": {
+                "cross-spawn": "7.0.6"
+            }
+        },
+        "sinon": {
+            "nise": "5.1.4",
+            "@sinonjs/samsam": "8.0.0"
+        }
+    },
+    "comments": {
+        "dependencies": {
+            "memfs": "4.39.0 is the last version known to work fine with Node 8.11.1",
+            "sinon": {
+                "nise": "5.1.4 is the last version known to work fine with Node 8.11.1",
+                "@sinonjs/samsam": "8.0.0 is the last version known to work fine with Node 8.11.1"
+            }
+        }
+    }
+}

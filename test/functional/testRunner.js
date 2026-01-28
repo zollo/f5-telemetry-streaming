@@ -1,5 +1,5 @@
 /**
- * Copyright 2024 F5, Inc.
+ * Copyright 2025 F5, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,11 +22,12 @@
  * @module test/functional/testRunner
  */
 
-const constants = require('./shared/constants');
+const constants = require('@f5-telemetry-tests/func-shared/constants');
+const harnessUtils = require('@f5-telemetry-tests/func-shared/harness');
+const miscUtils = require('@f5-telemetry-tests/func-shared/utils/misc');
+
 const consumerHostTests = require('./consumerSystemTests');
 const dutTests = require('./dutTests');
-const harnessUtils = require('./shared/harness');
-const miscUtils = require('./shared/utils/misc');
 
 const runConsumerTests = !miscUtils.getEnvArg(constants.ENV_VARS.TEST_CONTROLS.TESTS.SKIP_CONSUMER_TESTS, {
     castTo: 'boolean',

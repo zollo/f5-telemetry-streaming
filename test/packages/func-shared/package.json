@@ -1,0 +1,30 @@
+{
+    "name": "@f5-telemetry-tests/func-shared",
+    "version": "1.41.0-1",
+    "author": "F5, Inc.",
+    "license": "Apache-2.0",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/F5Networks/f5-telemetry-streaming.git",
+        "directory": "test/packages/func-shared"
+    },
+    "engines": {
+        "node": ">=24",
+        "npm": ">=11"
+    },
+    "scripts": {
+        "cleanup": "rm -rf ./node_modules"
+    },
+    "dependencies": {
+        "@cypress/request": "^3.0.10",
+        "@f5-telemetry-tests/common": "file:../common",
+        "ajv": "^8.17.1",
+        "aws-sdk": "^2",
+        "chai": "^6.2.0",
+        "chai-as-promised": "^8.0.2",
+        "icrdk": "git+https://git@github.com/f5devcentral/f5-icontrollx-dev-kit.git#master",
+        "jws": "^4.0.0",
+        "lodash": "^4.17.23",
+        "ssh2": "^1.17.0"
+    }
+}

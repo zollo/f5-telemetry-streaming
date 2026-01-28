@@ -1,0 +1,270 @@
+F5 Telemetry Streaming - npm Scripts Help Manual
+
+==================================================
+
+This document describes all available npm scripts defined in the root package.json.
+
+REQUIREMENTS
+=====================
+
+Following tools should be available in the environment if the developer want to verify changes locally:
+- Node.JS v8.11.1
+- NPM v6
+
+NOTE: you still can use up-to-date versions of tools, but verification should be done according to the list above.
+
+GENERAL COMMANDS
+================
+
+help
+----
+Usage: npm run help
+Description: Displays this help manual
+Purpose: Shows all available npm scripts and their usage
+
+audit:all
+---------
+Usage: npm run audit:all
+Description: Runs npm audit on all application, root, unit test and functional test dependencies
+Purpose: Security vulnerability checking for all packages
+Scope: Audits all application, root, unit test and functional test dependencies
+Runtime: any
+
+audit:dev
+---------
+Usage: npm run audit:dev
+Description: Runs npm audit on the root's package dependencies only.
+Purpose: Security vulnerability checking for all packages
+Scope: Audits all application dependencies
+Runtime: any
+
+audit:prod
+---------
+Usage: npm run audit:prod
+Description: Runs npm audit on the application's dependencies only
+Purpose: Security vulnerability checking for the application package
+Scope: Audits application production dependencies
+Runtime: any
+
+dev:cleanup
+-----------
+Usage: npm run dev:cleanup
+Description: Resets the workspace by removing generated artifacts and caches
+Purpose: Ensures subsequent installs and builds start from a clean baseline
+Actions: Deletes coverage/, node_modules/, and nyc_output/
+When to use: Before fresh builds, after large branch switches, prior to packaging/publishing, or when troubleshooting stale artifacts
+Notes: After cleanup, run npm ci or deps:refresh to reinstall dependencies
+
+dev:cleanup:all
+---------------
+Usage: npm run dev:cleanup:all
+Description: Resets the workspace by removing generated artifacts and caches for root and all test packages
+Purpose: Complete workspace reset including test/unit and test/functional directories
+Actions: Runs dev:cleanup plus dwv:cleanup in test/unit and test/functional
+When to use: When you need a complete fresh start across all packages
+Notes: After cleanup, reinstall dependencies in all affected directories
+
+outdated:all
+---------
+Usage: npm run outdated:all
+Description: Runs npm outdated on all application, root, unit test and functional test dependencies
+Purpose: Checking outdated dependencies for all packages
+Scope: Checks all application, root, unit test and functional test dependencies
+Runtime: any
+
+version
+-------
+Usage: npm version
+Description: Sets version for all packages in repository
+Purpose: Bump the version number
+Actions: Runs ./scripts/npm/version.sh script that reads version from the root directory and updates all packages
+
+INSTALLATION & DEPENDENCY COMMANDS
+===================================
+
+ci:application
+----------
+Usage: npm run ci:application
+Description: Installs application dependencies ONLY
+When to use:
+  - In CI/CD pipelines to test changes
+  - In CI/CD to build RPM
+Requirements: Valid application/npm-shrinkwrap-lock.json or (package-lock.json) must exist.
+Runtime: any
+
+ci:develop
+----------
+Usage: npm run ci:develop
+Description: Installs application and unit tests dependencies
+Purpose: Standard development workflow - reproducible install for development
+When to use:
+  - Setup development environment
+  - In CI/CD pipelines for development branches
+  - When you want to ensure exact dependency versions from lock file
+  - Before committing to verify tests pass with locked dependencies
+Runtime: any
+
+ci:functest
+-----------
+Usage: npm run ci:functest
+Description: Installs functional test dependencies in test/functional directory
+Purpose: Sets up functional test environment for CI/CD
+Location: Delegates to test/functional directory
+Requirements: Shoud use latest version of node.js and npm
+Runtime: latest version on node.js and npm
+
+ci:unit
+-----------
+Usage: npm run ci:unit
+Description: Installs unit test dependencies in test/unit directory
+Purpose: Sets up unit test environment for CI/CD
+Location: Delegates to test/unit directory
+Requirements: Valid test/unit/package-lock.json must exist
+Runtime: latest version on node.js and npm
+
+deps:refresh
+------------
+Usage: npm run deps:refresh
+Description: Installs/updates dependencies for the root package / directory ONLY. To update application or test dependencies the user has to run command for appropriate packages.
+Note: This modifies package-lock.json - commit changes after running
+Runtime: any
+
+LINTING COMMANDS
+================
+
+lint
+----
+Usage: npm run lint
+Description: Runs ESLint on source and test files
+Purpose: Checks code style and catches potential issues
+Scope: Analyzes application/ and test/ directories
+Runtime: node.js v12+
+
+TESTING COMMANDS
+================
+
+test
+----
+Usage: npm test
+Description: Alias for test:coverage - runs unit tests with coverage
+Purpose: Default test command for development
+Options: Pass the shell script arguments after '--' separator (e.g., npm run test -- tests/appEvetsTests.js)
+Location: Delegates to test/unit directory
+Runtime: node.js v8.11.1
+
+test:unit
+---------
+Usage: npm run test:unit
+Description: Runs unit tests (delegates to test/unit) without coverage reporting. Setting SMOKE_TESTING to 0 will instruct runner to run all variations.
+Purpose: Executes unit test suite
+Options: Pass the shell script arguments after '--' separator (e.g., npm run test:unit -- tests/appEvetsTests.js)
+Location: Delegates to test/unit directory
+Runtime: node.js v8.11.1
+
+test:coverage
+-------------
+Usage: npm run test:coverage
+Description: Runs unit tests with coverage reporting. Setting SMOKE_TESTING to 0 will instruct runner to run all variations.
+Purpose: Generates code coverage reports
+Location: Delegates to test/unit directory
+Options: Pass the shell script arguments after '--' separator (e.g., npm run test:coverage -- tests/appEvetsTests.js)
+Output: coverage/ directory with HTML, text, and JSON reports
+Runtime: node.js v8.11.1
+
+test:functional
+---------------
+Usage: npm run test:functional
+Description: Runs functional/integration tests
+Purpose: Tests complete system behavior and API endpoints
+Location: Delegates to test/functional directory
+Runtime: latest version of node.js
+
+CLOUD TESTING COMMANDS
+=======================
+
+test:cloud:azure
+----------------
+Usage: npm run test:cloud:azure
+Description: Runs Azure cloud-specific functional tests
+Purpose: Tests Azure cloud integrations and deployments
+Location: Delegates to test/functional directory
+Requirements: Azure environment setup and credentials
+Runtime: latest version of node.js
+
+test:cloud:aws
+--------------
+Usage: npm run test:cloud:aws
+Description: Runs AWS cloud-specific functional tests
+Purpose: Tests AWS cloud integrations and deployments
+Location: Delegates to test/functional directory
+Requirements: AWS environment setup and credentials
+Runtime: latest version of node.js
+
+BUILD COMMANDS
+==============
+
+build
+-----
+Usage: npm build
+Description: Builds the F5 Telemetry Streaming RPM package
+Purpose: Creates distributable RPM package for deployment
+Script: ./scripts/npm/build.sh
+Runtime: node.js v8.11.1 + npm v6
+
+LIFECYCLE HOOKS
+===============
+
+postinstall
+-----------
+Usage: Runs automatically after npm install/npm ci
+Description: Executes post-installation setup tasks
+Script Location: ./scripts/npm/post-install.sh
+Purpose: Performs necessary configuration or setup after dependencies are installed
+When it runs: Automatically triggered after:
+  - npm install
+  - npm ci
+  - npm run ci:install
+  - npm run deps:refresh
+Notes:
+- Removes all internal URLs from `package-lock.json` file
+
+ADDING NEW PACKAGES
+===================
+
+The package.json file in the project root contains devDependencies only (linting tools).
+All dependencies for application, unit and functional tests must be added to their respective package.json files:
+  - application/package.json for application dependencies
+  - test/unit/package.json for unit test dependencies
+  - test/functional/package.json for functional test dependencies
+
+IMPORTANT:
+
+For application and unit test dependencies package-lock.json (or npm-shrinkwrap.json) should have `version` equal to `2`.
+It will allow to use npm v6 + node.js v8.11.1 to build the RPM and run unit tests.
+
+So, let's say new package was added using node.js v12 + npm v8 then next steps should be:
+- swtich back to node.js 8.11.1 + npm v6
+- verify that package-lock.json has `version` set to `2`
+- run `npm run dev:cleanup:all`
+- run `npm run ci:develop`
+- run `npm test`
+- check that no unit test failed and coverage still the same
+
+COVERAGE CONFIGURATION
+======================
+
+Code coverage is configured in test/unit/package.json using nyc.
+- Reporters: html, text, json-summary
+- Include: application/** (only source files are covered)
+- Output: coverage/ directory in the root
+
+SCRIPT NAMING CONVENTIONS
+==========================
+
+- audit:* - Commands for auditing dependencies
+- ci:* - Commands for CI/CD pipelines (reproducible, strict)
+- dev:* - Development utilities (cleanup, audit, etc.)
+- deps:* - Dependency management commands
+- test:* - Test execution commands
+
+For more information, see the project's README.md and contributing documentation.

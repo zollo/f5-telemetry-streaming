@@ -1,5 +1,5 @@
 /**
- * Copyright 2024 F5, Inc.
+ * Copyright 2025 F5, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,13 @@
 
 'use strict';
 
-const chai = require('chai');
-const chaiAsPromised = require('chai-as-promised');
+const assert = require('@f5-telemetry-tests/func-shared/assert');
+const constants = require('@f5-telemetry-tests/func-shared/constants');
+const harnessUtils = require('@f5-telemetry-tests/func-shared/harness');
+const miscUtils = require('@f5-telemetry-tests/func-shared/utils/misc');
+const promiseUtils = require('@f5-telemetry-tests/func-shared/utils/promise');
 const querystring = require('querystring');
-
-const constants = require('../shared/constants');
-const harnessUtils = require('../shared/harness');
-const miscUtils = require('../shared/utils/misc');
-const promiseUtils = require('../shared/utils/promise');
-const testUtils = require('../shared/testUtils');
-
-chai.use(chaiAsPromised);
-const assert = chai.assert;
+const testUtils = require('@f5-telemetry-tests/func-shared/testUtils');
 
 /**
  * @module test/functional/consumersTests/splunk
@@ -49,6 +44,7 @@ const DOCKER_CONTAINERS = {
     Splunk: {
         detach: true,
         env: {
+            SPLUNK_GENERAL_TERMS: '--accept-sgt-current-at-splunk-com',
             SPLUNK_START_ARGS: '--accept-license',
             SPLUNK_PASSWORD
         },

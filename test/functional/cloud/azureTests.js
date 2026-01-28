@@ -1,5 +1,5 @@
 /**
- * Copyright 2024 F5, Inc.
+ * Copyright 2025 F5, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,13 @@
 
 'use strict';
 
-const chai = require('chai');
-const chaiAsPromised = require('chai-as-promised');
-
-const azureUtil = require('../shared/cloudUtils/azure');
-const harnessUtils = require('../shared/harness');
-const logger = require('../shared/utils/logger').getChild('azureCloudTests');
-const miscUtils = require('../shared/utils/misc');
-const promiseUtils = require('../shared/utils/promise');
-const testUtils = require('../shared/testUtils');
-
-chai.use(chaiAsPromised);
-const assert = chai.assert;
+const assert = require('@f5-telemetry-tests/func-shared/assert');
+const azureUtil = require('@f5-telemetry-tests/func-shared/cloudUtils/azure');
+const harnessUtils = require('@f5-telemetry-tests/func-shared/harness');
+const logger = require('@f5-telemetry-tests/func-shared/utils/logger').getChild('azureCloudTests');
+const miscUtils = require('@f5-telemetry-tests/func-shared/utils/misc');
+const promiseUtils = require('@f5-telemetry-tests/func-shared/utils/promise');
+const testUtils = require('@f5-telemetry-tests/func-shared/testUtils');
 
 /**
  * @module test/functional/cloud/azureTests

@@ -1,5 +1,5 @@
 /**
- * Copyright 2024 F5, Inc.
+ * Copyright 2025 F5, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -204,7 +204,7 @@ console.log(`Building ${outputRst} for Reference section`);
 let rstBody = '.. _schema-reference:\n\n';
 rstBody += 'Appendix A: Schema Reference\n';
 rstBody += '============================\n';
-rstBody += 'This page is a reference for the objects you can use in your Declarations for Telemetry Streaming. For more information on BIG-IP objects and terminology, see the BIG-IP documentation at https://support.f5.com/csp/home.\n';
+rstBody += 'This page is a reference for the objects you can use in your Declarations for Telemetry Streaming. For more information on BIG-IP objects and terminology, see the BIG-IP documentation at https://my.f5.com/manage/s/.\n';
 rstBody += 'Please note: this reference document is currently a work in progress.\n';
 
 function labelRemarkReference(key) {
