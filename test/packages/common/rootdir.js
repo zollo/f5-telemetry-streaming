@@ -20,7 +20,7 @@ const { join, resolve } = require('path');
 
 const findPkgRootDir = require('./pkgdir');
 
-const srcRootDir = findPkgRootDir(__dirname, 'f5-telemetry-root-dir');
+const srcRootDir = findPkgRootDir(__dirname, 'f5-telemetry');
 const utils = {
     /**
      * Load module from project's application directory.
