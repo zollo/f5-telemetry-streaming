@@ -296,7 +296,7 @@ describe('Azure_Log_Analytics_V2', () => {
                         (args) => args[0].fullURI && args[0].fullURI.includes('169.254.169.254')
                     );
                     assert.ok(imdsCall, 'expected IMDS call');
-                    assert.ok(imdsCall[0].fullURI.includes('monitor.azure.com'), 'expected monitor resource');
+                    assert.ok(imdsCall[0].fullURI.startsWith('http://169.254.169.254/') && imdsCall[0].fullURI.includes('resource=https://monitor.azure.com'), 'expected monitor resource');
                 });
         });
 
@@ -313,7 +313,7 @@ describe('Azure_Log_Analytics_V2', () => {
             });
 
             makeRequestStub.callsFake((opts) => {
-                if (opts.fullURI && opts.fullURI.includes('login.microsoftonline.com')) {
+                if (opts.fullURI && opts.fullURI.startsWith('https://login.microsoftonline.com')) {
                     return Promise.resolve({ access_token: 'sp-token' });
                 }
                 return Promise.resolve({});
@@ -323,7 +323,7 @@ describe('Azure_Log_Analytics_V2', () => {
                 .then((token) => {
                     assert.strictEqual(token, 'sp-token');
                     const spCall = makeRequestStub.args.find(
-                        (args) => args[0].fullURI && args[0].fullURI.includes('login.microsoftonline.com')
+                        (args) => args[0].fullURI && args[0].fullURI.startsWith('https://login.microsoftonline.com')
                     );
                     assert.ok(spCall, 'expected AAD call');
                     assert.ok(spCall[0].fullURI.includes('my-tenant'), 'expected tenant in URL');
@@ -347,7 +347,7 @@ describe('Azure_Log_Analytics_V2', () => {
             });
 
             makeRequestStub.callsFake((opts) => {
-                if (opts.fullURI && opts.fullURI.includes('login.microsoftonline.us')) {
+                if (opts.fullURI && opts.fullURI.startsWith('https://login.microsoftonline.us')) {
                     return Promise.resolve({ access_token: 'gov-sp-token' });
                 }
                 return Promise.resolve({});
@@ -357,7 +357,7 @@ describe('Azure_Log_Analytics_V2', () => {
                 .then((token) => {
                     assert.strictEqual(token, 'gov-sp-token');
                     const spCall = makeRequestStub.args.find(
-                        (args) => args[0].fullURI && args[0].fullURI.includes('login.microsoftonline.us')
+                        (args) => args[0].fullURI && args[0].fullURI.startsWith('https://login.microsoftonline.us')
                     );
                     assert.ok(spCall, 'expected gov cloud AAD call');
                     assert.ok(spCall[0].body.includes('monitor.azure.us'), 'expected gov monitor resource');
