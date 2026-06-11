@@ -1,0 +1,18 @@
+{
+    "class": "Telemetry",
+    "My_Consumer": {
+        "class": "Telemetry_Consumer",
+        "type": "Azure_Log_Analytics_V2",
+        "dcrImmutableId": "dcr-00000000000000000000000000000000",
+        "dceURI": "https://my-dce.eastus-1.ingest.monitor.azure.com",
+        "streamName": "Custom-F5Telemetry",
+        "tenantId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+        "clientId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+        "passphrase": {
+            "cipherText": "clientsecret"
+        },
+        "useManagedIdentity": false,
+        "region": "westus",
+        "format": "propertyBased"
+    }
+}
