@@ -6,7 +6,7 @@
     "packages": {
         "": {
             "name": "f5-telemetry",
-            "version": "1.41.0-0",
+            "version": "1.41.0-1",
             "hasInstallScript": true,
             "license": "Apache-2.0",
             "dependencies": {
@@ -23,6 +23,7 @@
                 "ajv-keywords": "3.5.2",
                 "applicationinsights": "1.8.10",
                 "aws-sdk": "2.1018.0",
+                "backslash": "^0.2.2",
                 "eventemitter2": "6.4.9",
                 "google-auth-library": "6.1.6",
                 "heap": "0.2.7",
@@ -42,6 +43,13 @@
             "engines": {
                 "node": ">=8.11.1",
                 "npm": ">=6"
+            }
+        },
+        "../opensource/json-duplicate-key-handle": {
+            "version": "1.0.0",
+            "license": "MIT",
+            "dependencies": {
+                "backslash": "^0.2.0"
             }
         },
         "node_modules/@cypress/request": {
@@ -700,6 +708,7 @@
         },
         "node_modules/backslash": {
             "version": "0.2.2",
+            "resolved": "https://registry.npmjs.org/backslash/-/backslash-0.2.2.tgz",
             "integrity": "sha512-PKRYPE2LLTtNUYz1dszquxKSBs6XyLyJRHgFpY5rlq7y3DscDx239k5Gm+zenoY47OU4CApan1o0k2R8ptZC1Q=="
         },
         "node_modules/balanced-match": {
@@ -1680,12 +1689,8 @@
             }
         },
         "node_modules/json-duplicate-key-handle": {
-            "version": "1.0.0",
-            "resolved": "file:../opensource/json-duplicate-key-handle",
-            "license": "MIT",
-            "dependencies": {
-                "backslash": "^0.2.0"
-            }
+            "resolved": "../opensource/json-duplicate-key-handle",
+            "link": true
         },
         "node_modules/json-schema": {
             "version": "0.4.0",
@@ -3357,6 +3362,7 @@
         },
         "backslash": {
             "version": "0.2.2",
+            "resolved": "https://registry.npmjs.org/backslash/-/backslash-0.2.2.tgz",
             "integrity": "sha512-PKRYPE2LLTtNUYz1dszquxKSBs6XyLyJRHgFpY5rlq7y3DscDx239k5Gm+zenoY47OU4CApan1o0k2R8ptZC1Q=="
         },
         "balanced-match": {
@@ -4087,7 +4093,7 @@
             }
         },
         "json-duplicate-key-handle": {
-            "version": "../opensource/json-duplicate-key-handle",
+            "version": "file:../opensource/json-duplicate-key-handle",
             "requires": {
                 "backslash": "^0.2.0"
             }
@@ -4408,7 +4414,7 @@
                 "@protobufjs/pool": "^1.1.0",
                 "@protobufjs/utf8": "^1.1.0",
                 "@types/node": ">=13.7.0",
-                "long": "^5.0.0"
+                "long": "5.2.5"
             }
         },
         "psl": {
