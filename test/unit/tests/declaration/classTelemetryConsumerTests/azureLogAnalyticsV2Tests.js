@@ -126,8 +126,24 @@ describe('Declarations -> Telemetry_Consumer -> Azure_Log_Analytics_V2', () => {
         }
     ));
 
-    it('should not allow passphrase when useManagedIdentity is true', () => assert.isRejected(
-        shared.validateFull({
+    it('should not allow service principal fields when useManagedIdentity is true', () => Promise.all([
+        assert.isRejected(shared.validateFull({
+            type: 'Azure_Log_Analytics_V2',
+            dcrImmutableId: 'dcr-00000000000000000000000000000000',
+            dceURI: 'https://my-dce.ingest.monitor.azure.com',
+            streamName: 'Custom-F5Telemetry',
+            useManagedIdentity: true,
+            tenantId: 'tenantId'
+        })),
+        assert.isRejected(shared.validateFull({
+            type: 'Azure_Log_Analytics_V2',
+            dcrImmutableId: 'dcr-00000000000000000000000000000000',
+            dceURI: 'https://my-dce.ingest.monitor.azure.com',
+            streamName: 'Custom-F5Telemetry',
+            useManagedIdentity: true,
+            clientId: 'clientId'
+        })),
+        assert.isRejected(shared.validateFull({
             type: 'Azure_Log_Analytics_V2',
             dcrImmutableId: 'dcr-00000000000000000000000000000000',
             dceURI: 'https://my-dce.ingest.monitor.azure.com',
@@ -136,9 +152,8 @@ describe('Declarations -> Telemetry_Consumer -> Azure_Log_Analytics_V2', () => {
             passphrase: {
                 cipherText: 'secret'
             }
-        }),
-        /useManagedIdentity\/const.*"allowedValue":false/
-    ));
+        }))
+    ]));
 
     it('should require tenantId, clientId and passphrase when useManagedIdentity is false', () => assert.isRejected(
         shared.validateFull({

@@ -1147,7 +1147,15 @@
                                     "then": { "required": ["tenantId", "clientId", "passphrase"] },
                                     "else": {
                                             "if": { "properties": { "useManagedIdentity": { "const": true } } },
-                                            "then": { "not": { "required": ["passphrase"] } },
+                                            "then": {
+                                                "not": {
+                                                    "anyOf": [
+                                                        { "required": ["tenantId"] },
+                                                        { "required": ["clientId"] },
+                                                        { "required": ["passphrase"] }
+                                                    ]
+                                                }
+                                            },
                                             "else": { "required": ["tenantId", "clientId", "passphrase"] }
                                     }
                                 }

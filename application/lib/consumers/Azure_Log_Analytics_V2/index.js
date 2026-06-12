@@ -103,6 +103,7 @@ module.exports = function (context) {
                         Authorization: 'Bearer ' + accessToken
                     },
                     body: data,
+                    expectedResponseCode: [200, 204],
                     allowSelfSignedCert: context.config.allowSelfSignedCert
                 };
 

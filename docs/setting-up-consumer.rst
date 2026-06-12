@@ -248,31 +248,31 @@ The following items have been added to the Azure Log Analytics V2 consumer since
         - Property
         - Description
 
-      * - 1.38
+      * - 1.41
         - **dcrImmutableId**
         - The immutable ID of the Azure Data Collection Rule that defines the data schema and destination Log Analytics workspace.
 
-      * - 1.38
+      * - 1.41
         - **dceURI**
         - The logs ingestion URI of the Azure Data Collection Endpoint (for example, ``https://my-dce-abc123.eastus-1.ingest.monitor.azure.com``).
 
-      * - 1.38
+      * - 1.41
         - **streamName**
         - The name of the custom stream declared in the Data Collection Rule (for example, ``Custom-F5Telemetry``).
 
-      * - 1.38
+      * - 1.41
         - **tenantId**
         - The Azure Active Directory tenant ID. Required when **useManagedIdentity** is *false* or omitted.
 
-      * - 1.38
+      * - 1.41
         - **clientId**
         - The application (client) ID of the service principal. Required when **useManagedIdentity** is *false* or omitted.
 
-      * - 1.38
+      * - 1.41
         - **region**
         - The **region** property for Azure Log Analytics V2 is used to determine the cloud type (public/commercial, GovCloud) so that the correct API URLs can be used. |br| - If you do not provide a region, BIG-IP Telemetry Streaming attempts to look it up from the instance metadata. |br| - If it is unable to extract metadata, BIG-IP TS defaults to public/commercial. |br| - Check the |azregion| for product/region compatibility for Azure Government. |br| - See the Azure documentation for a valid list of regions (resource location), and :ref:`Region list<azreg>` for example values from the Azure CLI.
 
-      * - 1.38
+      * - 1.41
         - **format**
         - See the **format** entries in the Azure Log Analytics additions table above.
 

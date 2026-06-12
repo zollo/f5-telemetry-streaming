@@ -142,6 +142,20 @@ describe('Azure_Log_Analytics_V2', () => {
                 });
         });
 
+        it('should accept HTTP 204 responses from the Logs Ingestion API', () => {
+            const context = testUtil.buildConsumerContext({
+                eventType: 'systemInfo',
+                config: defaultConsumerConfig
+            });
+            context.event.data = { myKey: 'myValue' };
+
+            return azureLogAnalyticsV2Index(context)
+                .then(() => {
+                    const req = getIngestionReq();
+                    assert.deepStrictEqual(req.expectedResponseCode, [200, 204]);
+                });
+        });
+
         it('should call getAccessTokenForIngestionApi with context', () => {
             const context = testUtil.buildConsumerContext({
                 eventType: 'systemInfo',
