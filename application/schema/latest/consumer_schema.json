@@ -465,6 +465,46 @@
             "minLength": 1,
             "f5expand": true
         },
+        "dcrImmutableId": {
+            "$comment": "Required for certain consumers: Azure_Log_Analytics_V2",
+            "title": "DCR Immutable ID",
+            "description": "The immutable ID of the Azure Data Collection Rule",
+            "type": "string",
+            "minLength": 1,
+            "f5expand": true
+        },
+        "dceURI": {
+            "$comment": "Required for certain consumers: Azure_Log_Analytics_V2",
+            "title": "Data Collection Endpoint URI",
+            "description": "The URI of the Azure Data Collection Endpoint",
+            "type": "string",
+            "minLength": 1,
+            "f5expand": true
+        },
+        "streamName": {
+            "$comment": "Required for certain consumers: Azure_Log_Analytics_V2",
+            "title": "Stream Name",
+            "description": "The name of the stream in the Azure Data Collection Rule",
+            "type": "string",
+            "minLength": 1,
+            "f5expand": true
+        },
+        "tenantId": {
+            "$comment": "Required for certain consumers: Azure_Log_Analytics_V2",
+            "title": "Tenant ID",
+            "description": "Azure Active Directory Tenant (Directory) ID for service principal authentication",
+            "type": "string",
+            "minLength": 1,
+            "f5expand": true
+        },
+        "clientId": {
+            "$comment": "Required for certain consumers: Azure_Log_Analytics_V2",
+            "title": "Client ID",
+            "description": "Azure Application (client) ID for service principal authentication",
+            "type": "string",
+            "minLength": 1,
+            "f5expand": true
+        },
         "serviceAccount": {
             "$comment": "Required for certain consumers: F5_Cloud",
             "title": "Service Account",
@@ -829,6 +869,7 @@
                             "AWS_CloudWatch",
                             "AWS_S3",
                             "Azure_Log_Analytics",
+                            "Azure_Log_Analytics_V2",
                             "Azure_Application_Insights",
                             "DataDog",
                             "default",
@@ -930,7 +971,12 @@
                             "convertBooleansToMetrics": {},
                             "exporter": {},
                             "partitionerType": {},
-                            "partitionKey": {}
+                            "partitionKey": {},
+                            "dcrImmutableId": {},
+                            "dceURI": {},
+                            "streamName": {},
+                            "tenantId": {},
+                            "clientId": {}
                         },
                         "additionalProperties": false,
                         "dependencies": {
@@ -1060,6 +1106,57 @@
                                             "if": { "properties": { "useManagedIdentity": { "const": true } } },
                                             "then": { "not": { "required": ["passphrase"] } },
                                             "else": { "required": ["passphrase"]}
+                                    }
+                                }
+                            ]
+                        },
+                        "else": {}
+                    },
+                    {
+                        "if": { "properties": { "type": { "const": "Azure_Log_Analytics_V2" } } },
+                        "then": {
+                            "required": [
+                                "dcrImmutableId",
+                                "dceURI",
+                                "streamName"
+                            ],
+                            "properties": {
+                                "dcrImmutableId": { "$ref": "#/definitions/dcrImmutableId" },
+                                "dceURI": { "$ref": "#/definitions/dceURI" },
+                                "streamName": { "$ref": "#/definitions/streamName" },
+                                "format": { "$ref": "#/definitions/format", "enum": [ "default", "propertyBased", "propertyBasedV2" ], "default": "default" },
+                                "useManagedIdentity": { "$ref": "#/definitions/useManagedIdentity", "default": false },
+                                "region": { "$ref": "#/definitions/region" },
+                                "tenantId": { "$ref": "#/definitions/tenantId" },
+                                "clientId": { "$ref": "#/definitions/clientId" },
+                                "passphrase": { "$ref": "base_schema.json#/definitions/secret" }
+                            },
+                            "allOf": [
+                                {
+                                    "dependencies": {
+                                        "passphrase": {
+                                            "anyOf": [
+                                                { "not": {"required": [ "useManagedIdentity" ] } },
+                                                { "properties": { "useManagedIdentity": { "const": false } } }
+                                            ]
+                                        }
+                                    }
+                                },
+                                {
+                                    "if": { "not": { "required" : [ "useManagedIdentity"] } },
+                                    "then": { "required": ["tenantId", "clientId", "passphrase"] },
+                                    "else": {
+                                            "if": { "properties": { "useManagedIdentity": { "const": true } } },
+                                            "then": {
+                                                "not": {
+                                                    "anyOf": [
+                                                        { "required": ["tenantId"] },
+                                                        { "required": ["clientId"] },
+                                                        { "required": ["passphrase"] }
+                                                    ]
+                                                }
+                                            },
+                                            "else": { "required": ["tenantId", "clientId", "passphrase"] }
                                     }
                                 }
                             ]

@@ -216,6 +216,88 @@ Example Declaration:
 
 |
 
+.. _azure-log-analytics-v2-ref:
+
+Microsoft Azure Log Analytics V2
+---------------------------------
+|azure_img|
+
+The Azure Log Analytics V2 consumer uses the modern |Logs Ingestion API| (the legacy HTTP Data Collector API used by the original Azure Log Analytics consumer is being deprecated). You must pre-configure a Data Collection Rule (DCR) and a Data Collection Endpoint (DCE) in Azure before using this consumer.
+
+Required Information:
+ - **DCR Immutable ID**: The immutable ID of your Data Collection Rule. Navigate to :guilabel:`Azure Monitor > Data Collection Rules > [your DCR] > Overview > JSON View` and look for ``immutableId``.
+ - **DCE URI**: The logs ingestion endpoint of your Data Collection Endpoint. Navigate to :guilabel:`Azure Monitor > Data Collection Endpoints > [your DCE] > Overview` and copy the **Logs Ingestion** endpoint URI.
+ - **Stream Name**: The name of the custom stream defined in the DCR (for example, ``Custom-F5Telemetry``).
+
+**Service Principal authentication** additionally requires:
+ - **Tenant ID**: Your Azure Active Directory tenant (directory) ID.
+ - **Client ID**: The application (client) ID of the service principal.
+ - **Passphrase**: The client secret for the service principal.
+
+.. NOTE:: The Azure Log Analytics V2 consumer supports the same **format** and **region** properties as the original Azure Log Analytics consumer. See the table in :ref:`Microsoft Azure Log Analytics<azure-ref>` for details on those properties.
+
+Additions to the Azure Log Analytics V2 consumer
+``````````````````````````````````````````````````
+The following items have been added to the Azure Log Analytics V2 consumer since it was introduced.
+
+.. list-table::
+      :widths: 25 25 200
+      :header-rows: 1
+
+      * - BIG-IP TS Version
+        - Property
+        - Description
+
+      * - 1.41
+        - **dcrImmutableId**
+        - The immutable ID of the Azure Data Collection Rule that defines the data schema and destination Log Analytics workspace.
+
+      * - 1.41
+        - **dceURI**
+        - The logs ingestion URI of the Azure Data Collection Endpoint (for example, ``https://my-dce-abc123.eastus-1.ingest.monitor.azure.com``).
+
+      * - 1.41
+        - **streamName**
+        - The name of the custom stream declared in the Data Collection Rule (for example, ``Custom-F5Telemetry``).
+
+      * - 1.41
+        - **tenantId**
+        - The Azure Active Directory tenant ID. Required when **useManagedIdentity** is *false* or omitted.
+
+      * - 1.41
+        - **clientId**
+        - The application (client) ID of the service principal. Required when **useManagedIdentity** is *false* or omitted.
+
+      * - 1.41
+        - **region**
+        - The **region** property for Azure Log Analytics V2 is used to determine the cloud type (public/commercial, GovCloud) so that the correct API URLs can be used. |br| - If you do not provide a region, BIG-IP Telemetry Streaming attempts to look it up from the instance metadata. |br| - If it is unable to extract metadata, BIG-IP TS defaults to public/commercial. |br| - Check the |azregion| for product/region compatibility for Azure Government. |br| - See the Azure documentation for a valid list of regions (resource location), and :ref:`Region list<azreg>` for example values from the Azure CLI.
+
+      * - 1.41
+        - **format**
+        - See the **format** entries in the Azure Log Analytics additions table above.
+
+|
+
+Example Declaration (Service Principal):
+
+.. literalinclude:: ../examples/declarations/consumers/Azure_Log_Analytics_V2/azure_log_analytics_v2.json
+    :language: json
+
+|
+
+.. _mi-v2:
+
+Using Microsoft Managed Identities for Log Analytics V2
+`````````````````````````````````````````````````````````
+The Azure Log Analytics V2 consumer supports Azure Managed Identities via the **useManagedIdentity** property, in the same way as the original consumer. When **useManagedIdentity** is *true*, you must omit the **tenantId**, **clientId**, and **passphrase** properties. For specific information on Managed Identities, see |managedid|.
+
+Example Declaration (Managed Identity):
+
+.. literalinclude:: ../examples/declarations/consumers/Azure_Log_Analytics_V2/azure_log_analytics_v2_mi.json
+    :language: json
+
+|
+
 .. _appinsight-ref:
 
 Microsoft Azure Application Insights
@@ -1289,6 +1371,10 @@ In the following table, we list the Azure Government regions.
 .. |HTTP Data Collector API| raw:: html
 
    <a href="https://docs.microsoft.com/en-us/azure/azure-monitor/platform/data-collector-api" target="_blank">HTTP Data Collector API documentation</a>
+
+.. |Logs Ingestion API| raw:: html
+
+   <a href="https://learn.microsoft.com/en-us/azure/azure-monitor/logs/logs-ingestion-api-overview" target="_blank">Azure Monitor Logs Ingestion API</a>
 
 .. |azure_dashboard| raw:: html
 

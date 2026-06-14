@@ -140,6 +140,82 @@ function getAccessTokenFromMetadata(context, mgmtUrl) {
         });
 }
 
+/**
+ * Returns the Azure Monitor resource URL for the given context (handles GovCloud).
+ *
+ * @param {Object} context - context object including config
+ * @returns {String} Azure Monitor resource base URL
+ */
+function getMonitorResourceUrl(context) {
+    const region = getInstanceRegion(context);
+    return isGovCloud(region) ? 'https://monitor.azure.us' : 'https://monitor.azure.com';
+}
+
+/**
+ * Returns the Azure Active Directory login base URL for the given context (handles GovCloud).
+ *
+ * @param {Object} context - context object including config
+ * @returns {String} AAD login base URL
+ */
+function getAadLoginUrl(context) {
+    const region = getInstanceRegion(context);
+    return isGovCloud(region) ? 'https://login.microsoftonline.us' : 'https://login.microsoftonline.com';
+}
+
+/**
+ * Retrieves an OAuth2 access token for the Logs Ingestion API using a service principal
+ * (client credentials flow).
+ *
+ * @param {Object} context - context object including config
+ * @returns {Promise<String>} access token
+ */
+function getAccessTokenFromServicePrincipal(context) {
+    const monitorResource = getMonitorResourceUrl(context);
+    const aadLoginUrl = getAadLoginUrl(context);
+    const tenantId = context.config.tenantId;
+    const clientId = context.config.clientId;
+    const clientSecret = context.config.passphrase;
+
+    const scope = encodeURIComponent(monitorResource + '/.default');
+    const body = 'grant_type=client_credentials'
+        + '&client_id=' + encodeURIComponent(clientId)
+        + '&client_secret=' + encodeURIComponent(clientSecret)
+        + '&scope=' + scope;
+
+    const tokenOpts = {
+        method: 'POST',
+        fullURI: aadLoginUrl + '/' + tenantId + '/oauth2/v2.0/token',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body,
+        json: false,
+        allowSelfSignedCert: context.config.allowSelfSignedCert
+    };
+
+    return requestsUtil.makeRequest(tokenOpts)
+        .then((resp) => resp.access_token)
+        .catch((err) => {
+            context.logger.error('Unable to get access token via service principal. Error: ' + err.message);
+            return Promise.reject(err);
+        });
+}
+
+/**
+ * Retrieves an OAuth2 access token for the Azure Logs Ingestion API.
+ * Uses Managed Identity (IMDS) when `context.config.useManagedIdentity` is true,
+ * otherwise uses client credentials (service principal) flow.
+ *
+ * @param {Object} context - context object including config
+ * @returns {Promise<String>} access token
+ */
+function getAccessTokenForIngestionApi(context) {
+    if (context.config.useManagedIdentity) {
+        return getAccessTokenFromMetadata(context, getMonitorResourceUrl(context));
+    }
+    return getAccessTokenFromServicePrincipal(context);
+}
+
 function listSubscriptions(accessToken, url) {
     const listSubOpts = {
         fullURI: `${url}/subscriptions?api-version=2019-11-01`,
@@ -512,6 +588,7 @@ function scrubReservedKeys(data) {
 module.exports = {
     signSharedKey,
     getSharedKey,
+    getAccessTokenForIngestionApi,
     getMetrics,
     getInstrumentationKeys,
     getApiUrl,
