@@ -234,7 +234,7 @@ Required Information:
  - **Client ID**: The application (client) ID of the service principal.
  - **Passphrase**: The client secret for the service principal.
 
-.. NOTE:: The Azure Log Analytics V2 consumer supports the same **format** and **region** properties as the original Azure Log Analytics consumer. See the table in :ref:`Microsoft Azure Log Analytics<push>` for details on those properties.
+.. NOTE:: The Azure Log Analytics V2 consumer supports the same **format** and **region** properties as the original Azure Log Analytics consumer. See the table in :ref:`Microsoft Azure Log Analytics<azure-ref>` for details on those properties.
 
 Additions to the Azure Log Analytics V2 consumer
 ``````````````````````````````````````````````````
